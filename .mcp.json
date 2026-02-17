@@ -6,6 +6,18 @@
                 "artisan",
                 "boost:mcp"
             ]
+        },
+        "demo-local": {
+            "command": "php",
+            "args": [
+                "artisan",
+                "mcp:start",
+                "demo"
+            ]
+        },
+        "demo-server": {
+            "type": "http",
+            "url": "http://localhost:8000/mcp/demo"
         }
     }
 }
