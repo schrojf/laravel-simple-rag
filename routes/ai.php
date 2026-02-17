@@ -1,5 +1,9 @@
 <?php
 
+// use App\Mcp\Servers\WeatherExample;
 use Laravel\Mcp\Facades\Mcp;
 
-// Mcp::web('/mcp/demo', \App\Mcp\Servers\PublicServer::class);
+Mcp::oauthRoutes();
+
+// Mcp::web('/mcp/weather', WeatherExample::class)
+//     ->middleware('auth:api');
