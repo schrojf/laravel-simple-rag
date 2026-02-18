@@ -6,7 +6,10 @@
         </a>
 
         @if(auth()->user()?->isAdmin())
-            {{-- Admin-only nav items go here --}}
+            <a href="{{ route('admin.invitation-codes.index') }}"
+               class="px-3 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer {{ request()->routeIs('admin.invitation-codes.*') ? 'bg-indigo-50 text-indigo-700' : 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100' }}">
+                Invitation Codes
+            </a>
         @endif
     </div>
 </nav>

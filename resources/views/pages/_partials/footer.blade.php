@@ -4,7 +4,9 @@
             {{ config('app.name') }} &middot; {{ config('app.env') }}
         </p>
         <p class="text-xs text-zinc-400 flex items-center gap-3">
+            @if(defined('LARAVEL_START'))
             <span title="Page render time">{{ round((microtime(true) - LARAVEL_START) * 1000) }}ms</span>
+            @endif
             <span title="Peak memory usage">{{ round(memory_get_peak_usage(true) / 1024 / 1024, 1) }}MB</span>
             <span title="Laravel version">Laravel {{ app()->version() }}</span>
             <span title="PHP version">PHP {{ PHP_VERSION }}</span>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\InvitationCodeController;
 use App\Http\Controllers\Auth\LogoutPageController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Settings\PasswordController;
@@ -23,5 +24,9 @@ Route::middleware('auth')->group(function () {
     Route::prefix('settings')->name('settings.')->group(function () {
         Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
         Route::get('/password', [PasswordController::class, 'show'])->name('password');
+    });
+
+    Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
+        Route::resource('invitation-codes', InvitationCodeController::class);
     });
 });

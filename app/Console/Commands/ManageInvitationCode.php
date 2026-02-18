@@ -143,22 +143,6 @@ class ManageInvitationCode extends Command
 
     private function generateCode(): string
     {
-        do {
-            $code = $this->generateSegment().'-'.$this->generateSegment().'-'.$this->generateSegment();
-        } while (InvitationCode::where('code', $code)->exists());
-
-        return $code;
-    }
-
-    private function generateSegment(): string
-    {
-        $charset = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-        $segment = '';
-
-        for ($i = 0; $i < 3; $i++) {
-            $segment .= $charset[random_int(0, strlen($charset) - 1)];
-        }
-
-        return $segment;
+        return InvitationCode::generateCode();
     }
 }
