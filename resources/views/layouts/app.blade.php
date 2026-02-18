@@ -15,7 +15,7 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-screen bg-zinc-50 font-sans antialiased">
+<body class="min-h-screen bg-zinc-50 font-sans antialiased flex flex-col">
     <header class="bg-white border-b border-zinc-200 sticky top-0 z-10">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
             <a href="/" class="flex items-center gap-2.5">
@@ -40,8 +40,9 @@
     </header>
     @include('pages._partials.navigation')
 
-    <main class="max-w-5xl mx-auto px-4 sm:px-6 py-8">
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 py-8 flex-1 w-full">
         @yield('content')
     </main>
+    @include('pages._partials.footer')
 </body>
 </html>

@@ -2,6 +2,7 @@
 @section('title', 'Dashboard')
 
 @section('content')
+<div id="dashboardPage">
 <div class="mb-8">
     <h1 class="text-2xl font-semibold text-zinc-900">Dashboard</h1>
     <p class="text-sm text-zinc-500 mt-1">Welcome back, {{ auth()->user()->name }}.</p>
@@ -54,4 +55,5 @@
         <p class="text-sm text-zinc-400 mt-1">LLM interactions</p>
     </div>
 </div>
+</div>{{-- #dashboardPage --}}
 @endsection
