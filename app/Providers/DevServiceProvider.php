@@ -37,6 +37,11 @@ class DevServiceProvider extends ServiceProvider
             Route::get('/style-guide', function () {
                 return view('dev.style-guide');
             })->name('_dev.style-guide');
+
+            // It does work, but user model needs implement MustVerifyEmail contract
+            Route::get('/verified', function () {
+                return 'Only verified users may access this route...';
+            })->middleware(['auth', 'verified']);
         });
     }
 }
