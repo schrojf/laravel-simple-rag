@@ -11,6 +11,29 @@
     <form method="POST" action="{{ route('register') }}" class="space-y-4">
         @csrf
 
+        @if(config('app.require_invitation'))
+        <div>
+            <label for="invitation_code" class="block text-sm font-medium text-zinc-700 mb-1.5">Invitation Code</label>
+            <input
+                type="text"
+                id="invitation_code"
+                name="invitation_code"
+                value="{{ old('invitation_code') }}"
+                required
+                autocomplete="off"
+                maxlength="11"
+                pattern="[A-Za-z0-9]{3}-[A-Za-z0-9]{3}-[A-Za-z0-9]{3}"
+                placeholder="ABC-DEF-GHJ"
+                style="text-transform: uppercase"
+                class="w-full border @error('invitation_code') border-red-500 @else border-zinc-300 @enderror rounded-lg px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            >
+            <p class="mt-1.5 text-xs text-zinc-400">Enter the invitation code you received (format: XXX-XXX-XXX)</p>
+            @error('invitation_code')
+                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+            @enderror
+        </div>
+        @endif
+
         <div>
             <label for="name" class="block text-sm font-medium text-zinc-700 mb-1.5">Full name</label>
             <input

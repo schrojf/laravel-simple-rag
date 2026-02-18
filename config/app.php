@@ -123,4 +123,17 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Invitation Code Requirement
+    |--------------------------------------------------------------------------
+    |
+    | When this value is true, users must provide a valid invitation code to
+    | complete registration. Codes are managed via the invitation:manage
+    | Artisan command. Set to false to allow open registration.
+    |
+    */
+
+    'require_invitation' => env('APP_REQUIRE_INVITATION', false),
+
 ];
