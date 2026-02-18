@@ -35,17 +35,10 @@
                 <span class="font-semibold text-zinc-900 text-sm">{{ config('app.name') }}</span>
             </a>
 
-            <div class="flex items-center gap-4">
-                <span class="text-sm text-zinc-500">{{ auth()->user()?->email }}</span>
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="text-sm text-zinc-600 hover:text-zinc-900 font-medium transition-colors cursor-pointer">
-                        Sign out
-                    </button>
-                </form>
-            </div>
+            @include('pages._partials.header')
         </div>
     </header>
+    @include('pages._partials.navigation')
 
     <main class="max-w-5xl mx-auto px-4 sm:px-6 py-8">
         @yield('content')
