@@ -14,6 +14,7 @@ class InvitationCodeController extends Controller
     public function index(): View
     {
         $invitationCodes = InvitationCode::query()
+            ->with('usedBy')
             ->latest()
             ->paginate(15);
 

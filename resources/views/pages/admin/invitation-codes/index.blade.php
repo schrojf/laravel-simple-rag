@@ -52,7 +52,14 @@
                             @endif
                         </td>
                         <td class="px-4 py-3 text-zinc-500">{{ $code->used_at?->format('Y-m-d H:i') ?? '—' }}</td>
-                        <td class="px-4 py-3 text-zinc-500">{{ $code->used_by ?? '—' }}</td>
+                        <td class="px-4 py-3">
+                            @if($code->usedBy)
+                                <a href="#" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">{{ $code->usedBy->name }}</a>
+                                <span class="block text-xs text-zinc-400">{{ $code->usedBy->email }}</span>
+                            @else
+                                <span class="text-zinc-400">—</span>
+                            @endif
+                        </td>
                         <td class="px-4 py-3 text-zinc-500 max-w-xs truncate">{{ $code->description ?? '—' }}</td>
                         <td class="px-4 py-3 text-zinc-400">{{ $code->created_at->format('Y-m-d') }}</td>
                         <td class="px-4 py-3">

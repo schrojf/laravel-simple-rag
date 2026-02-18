@@ -2,16 +2,25 @@
 @section('title', 'Edit Invitation Code')
 
 @section('content')
+<div id="adminInvitationCodesPage">
 <div class="mb-6">
     <a href="{{ route('admin.invitation-codes.index') }}"
        class="text-sm text-zinc-500 hover:text-zinc-700 transition-colors">&larr; Invitation Codes</a>
     <h1 class="text-2xl font-semibold text-zinc-900 mt-2">Edit: <span class="font-mono">{{ $invitationCode->code }}</span></h1>
 </div>
 
+@php $isClaimed = $invitationCode->used_at !== null; @endphp
+
 <div class="bg-white rounded-xl border border-zinc-200 shadow-sm max-w-lg mb-6">
     <div class="px-6 py-5 border-b border-zinc-100">
         <h2 class="text-base font-medium text-zinc-900">Code details</h2>
-        <p class="text-sm text-zinc-500 mt-0.5">The code itself cannot be changed after creation.</p>
+        <p class="text-sm text-zinc-500 mt-0.5">
+            @if($isClaimed)
+                This code has been claimed — only the description can be edited.
+            @else
+                The code itself cannot be changed after creation.
+            @endif
+        </p>
     </div>
 
     <div class="px-6 py-5">
@@ -32,15 +41,23 @@
                 </p>
             </div>
 
-            @if($invitationCode->used_at)
+            @if($isClaimed)
                 <div>
-                    <label class="block text-sm font-medium text-zinc-700 mb-1.5">Used</label>
-                    <p class="text-sm text-zinc-500">
-                        {{ $invitationCode->used_at->format('Y-m-d H:i') }}
-                        @if($invitationCode->used_by)
-                            by user #{{ $invitationCode->used_by }}
-                        @endif
-                    </p>
+                    <label class="block text-sm font-medium text-zinc-700 mb-1.5">Claimed by</label>
+                    @if($invitationCode->usedBy)
+                        <div class="flex items-center gap-3">
+                            <div class="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 text-xs font-semibold shrink-0">
+                                {{ $invitationCode->usedBy->initials() }}
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-zinc-900">{{ $invitationCode->usedBy->name }}</p>
+                                <p class="text-xs text-zinc-500">{{ $invitationCode->usedBy->email }}</p>
+                            </div>
+                        </div>
+                    @else
+                        <p class="text-sm text-zinc-500">User #{{ $invitationCode->used_by }}</p>
+                    @endif
+                    <p class="text-xs text-zinc-400 mt-1.5">{{ $invitationCode->used_at->format('Y-m-d H:i') }}</p>
                 </div>
             @endif
 
@@ -65,9 +82,15 @@
                     name="active"
                     value="1"
                     {{ old('active', $invitationCode->active) ? 'checked' : '' }}
-                    class="h-4 w-4 rounded border-zinc-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                    {{ $isClaimed ? 'disabled' : '' }}
+                    class="h-4 w-4 rounded border-zinc-300 text-indigo-600 focus:ring-indigo-500 {{ $isClaimed ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer' }}"
                 >
-                <label for="active" class="text-sm font-medium text-zinc-700 cursor-pointer">Active</label>
+                <label for="active" class="text-sm font-medium text-zinc-700 {{ $isClaimed ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer' }}">
+                    Active
+                </label>
+                @if($isClaimed)
+                    <span class="text-xs text-zinc-400">(locked — code has been used)</span>
+                @endif
             </div>
 
             <div class="flex items-center gap-3 pt-1">
@@ -105,4 +128,5 @@
         </form>
     </div>
 </div>
+</div>{{-- #adminInvitationCodesPage --}}
 @endsection

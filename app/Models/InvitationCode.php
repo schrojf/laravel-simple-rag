@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class InvitationCode extends Model
 {
@@ -15,6 +16,11 @@ class InvitationCode extends Model
             'used_at' => 'datetime',
             'used_by' => 'integer',
         ];
+    }
+
+    public function usedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'used_by');
     }
 
     public static function generateCode(): string

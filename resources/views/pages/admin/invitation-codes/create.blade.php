@@ -2,6 +2,7 @@
 @section('title', 'New Invitation Code')
 
 @section('content')
+<div id="adminInvitationCodesPage">
 <div class="mb-6">
     <a href="{{ route('admin.invitation-codes.index') }}"
        class="text-sm text-zinc-500 hover:text-zinc-700 transition-colors">&larr; Invitation Codes</a>
@@ -76,4 +77,5 @@
         </form>
     </div>
 </div>
+</div>{{-- #adminInvitationCodesPage --}}
 @endsection
