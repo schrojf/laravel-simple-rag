@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\InvitationCodeController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\LogoutPageController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Settings\PasswordController;
@@ -27,6 +28,7 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
+        Route::resource('users', UserController::class)->only(['index', 'show']);
         Route::resource('invitation-codes', InvitationCodeController::class);
     });
 });

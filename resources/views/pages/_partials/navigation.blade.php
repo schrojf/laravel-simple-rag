@@ -6,6 +6,10 @@
         </a>
 
         @if(auth()->user()?->isAdmin())
+            <a href="{{ route('admin.users.index') }}"
+               class="px-3 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer {{ request()->routeIs('admin.users.*') ? 'bg-indigo-50 text-indigo-700' : 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100' }}">
+                Users
+            </a>
             <a href="{{ route('admin.invitation-codes.index') }}"
                class="px-3 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer {{ request()->routeIs('admin.invitation-codes.*') ? 'bg-indigo-50 text-indigo-700' : 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100' }}">
                 Invitation Codes
