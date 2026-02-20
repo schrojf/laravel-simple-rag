@@ -15,16 +15,7 @@ export default [
         },
     },
     {
-        ignores: [
-            'node_modules/**',
-            'vendor/**',
-            'public/**',
-            'storage/**',
-            'bootstrap/cache/**',
-            'dist/**',
-            'coverage/**',
-            '*.min.js',
-        ],
+        ignores: ['node_modules/**', 'vendor/**', 'public/**', 'storage/**', 'bootstrap/cache/**', 'dist/**', 'coverage/**', '*.min.js'],
     },
     prettier, // Turn off all rules that might conflict with Prettier
 ];

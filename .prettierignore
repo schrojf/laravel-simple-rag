@@ -1,5 +1,15 @@
 resources/views/mail/*
 
+.ai/
+.agents/
+.claude/
+.cursor/
+.gemini/
+.mcp.json
+boost.json
+CLAUDE.md
+GEMINI.md
+
 # Dependencies
 node_modules/
 vendor/
