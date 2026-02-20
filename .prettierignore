@@ -3,6 +3,7 @@ node_modules/
 vendor/
 
 # Laravel specific
+*.sqlite
 bootstrap/cache/
 storage/
 public/
