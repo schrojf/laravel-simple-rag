@@ -9,7 +9,9 @@ Mcp::oauthRoutes();
 // Mcp::web('/mcp/weather', WeatherExample::class)
 //     ->middleware('auth:api');
 
-Mcp::web('/mcp/demo', serverClass: DemoServer::class);
+Mcp::web('/mcp/demo', serverClass: DemoServer::class)
+    ->middleware('auth:api');
+
 if (app()->environment('local')) {
     Mcp::local('demo', serverClass: DemoServer::class);
 }
