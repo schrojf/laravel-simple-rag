@@ -1,3 +1,5 @@
+resources/views/mail/*
+
 # Dependencies
 node_modules/
 vendor/

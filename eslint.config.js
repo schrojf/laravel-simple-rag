@@ -1,17 +1,19 @@
 import js from '@eslint/js';
+import prettier from 'eslint-config-prettier';
 import globals from 'globals';
+import typescript from 'typescript-eslint';
 
+/** @type {import('eslint').Linter.Config[]} */
 export default [
+    js.configs.recommended,
+    ...typescript.configs.recommended,
     {
-        files: ['**/*.js', '**/*.mjs'],
         languageOptions: {
             globals: {
                 ...globals.browser,
-                process: 'readonly',
             },
         },
     },
-    js.configs.recommended,
     {
         ignores: [
             'node_modules/**',
@@ -24,4 +26,5 @@ export default [
             '*.min.js',
         ],
     },
+    prettier, // Turn off all rules that might conflict with Prettier
 ];
