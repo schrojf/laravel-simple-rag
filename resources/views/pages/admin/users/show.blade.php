@@ -60,9 +60,9 @@
             <h2 class="text-sm font-semibold text-zinc-700">Invitation Code</h2>
         </div>
         <div class="px-5 py-4">
-            @if($user->usedInvitationCode)
-                <p class="font-mono text-sm font-medium text-zinc-900">{{ $user->usedInvitationCode->code }}</p>
-                <p class="text-xs text-zinc-400 mt-1">Used {{ $user->usedInvitationCode->used_at?->format('Y-m-d H:i') }}</p>
+            @if($usedInvitationCode)
+                <p class="font-mono text-sm font-medium text-zinc-900">{{ $usedInvitationCode->code }}</p>
+                <p class="text-xs text-zinc-400 mt-1">Used {{ $usedInvitationCode->used_at?->format('Y-m-d H:i') }}</p>
             @else
                 <p class="text-sm text-zinc-400">No invitation code — open registration was used.</p>
             @endif

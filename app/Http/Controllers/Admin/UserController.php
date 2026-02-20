@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\InvitationCode;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
 
@@ -17,8 +18,8 @@ class UserController extends Controller
 
     public function show(User $user): View
     {
-        $user->load('usedInvitationCode');
+        $usedInvitationCode = InvitationCode::query()->where('used_by', $user->id)->first();
 
-        return view('pages.admin.users.show', compact('user'));
+        return view('pages.admin.users.show', compact('user', 'usedInvitationCode'));
     }
 }

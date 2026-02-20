@@ -4,7 +4,6 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
@@ -54,11 +53,6 @@ class User extends Authenticatable implements OAuthenticatable
     public function isAdmin(): bool
     {
         return $this->is_admin;
-    }
-
-    public function usedInvitationCode(): HasOne
-    {
-        return $this->hasOne(InvitationCode::class, 'used_by');
     }
 
     /**
