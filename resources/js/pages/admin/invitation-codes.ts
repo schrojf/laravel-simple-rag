@@ -1,7 +1,7 @@
 const MAX_LENGTH = 500;
 
-export function init(el) {
-    const textarea = el.querySelector('textarea[name="description"]');
+export function init(el: HTMLElement) {
+    const textarea = el.querySelector('textarea[name="description"]') as HTMLTextAreaElement | null;
     if (!textarea) {
         return;
     }
@@ -15,9 +15,9 @@ export function init(el) {
     errorMsg.textContent = `Description must not exceed ${MAX_LENGTH} characters.`;
     counter.after(errorMsg);
 
-    const submitBtn = el.querySelector('button[type="submit"]');
+    const submitBtn = el.querySelector('button[type="submit"]') as HTMLButtonElement | null;
 
-    function update() {
+    const update = () => {
         const len = textarea.value.length;
         const over = len > MAX_LENGTH;
 
@@ -30,7 +30,7 @@ export function init(el) {
             submitBtn.classList.toggle('opacity-50', over);
             submitBtn.classList.toggle('cursor-not-allowed', over);
         }
-    }
+    };
 
     textarea.addEventListener('input', update);
     update();
