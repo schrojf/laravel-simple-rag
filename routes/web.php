@@ -20,8 +20,7 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('logout', [LogoutPageController::class, '__invoke'])
-        ->name('logout');
+    Route::get('logout', [LogoutPageController::class, '__invoke']);
 
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
 
