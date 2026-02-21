@@ -11,7 +11,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use League\CommonMark\GithubFlavoredMarkdownConverter;
+use Illuminate\Support\Str;
 
 class EntryController extends Controller
 {
@@ -39,9 +39,10 @@ class EntryController extends Controller
 
         $entry->load(['type', 'topics']);
 
-        $renderedContent = (new GithubFlavoredMarkdownConverter(['html_input' => 'strip']))
-            ->convert($entry->content)
-            ->getContent();
+        $renderedContent = Str::of($entry->content)->markdown([
+            'html_input' => 'strip',
+            'allow_unsafe_links' => false,
+        ]);
 
         return view('pages.entries.show', compact('entry', 'renderedContent'));
     }
