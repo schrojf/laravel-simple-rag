@@ -17,6 +17,15 @@ function ready() {
         }
     });
 
+    // Confirm dialog for any form with a data-confirm attribute
+    document.addEventListener('submit', (event: Event) => {
+        const form = event.target as HTMLFormElement;
+        const message = form.dataset.confirm;
+        if (message && !window.confirm(message)) {
+            event.preventDefault();
+        }
+    });
+
     // Here will be code which is always loaded e.g. menu bar toggle etc.
 }
 

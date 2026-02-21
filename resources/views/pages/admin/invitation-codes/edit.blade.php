@@ -118,7 +118,7 @@
             <p class="text-sm text-zinc-500 mt-0.5">This action cannot be undone.</p>
         </div>
         <form method="POST" action="{{ route('admin.invitation-codes.destroy', $invitationCode) }}"
-              onsubmit="return confirm('Delete invitation code {{ $invitationCode->code }}?')">
+              data-confirm="Delete invitation code {{ $invitationCode->code }}?">
             @csrf
             @method('DELETE')
             <button type="submit"

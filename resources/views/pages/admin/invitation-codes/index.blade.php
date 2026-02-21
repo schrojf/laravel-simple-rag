@@ -69,7 +69,7 @@
                                     Edit
                                 </a>
                                 <form method="POST" action="{{ route('admin.invitation-codes.destroy', $code) }}"
-                                      onsubmit="return confirm('Delete invitation code {{ $code->code }}?')">
+                                      data-confirm="Delete invitation code {{ $code->code }}?">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"

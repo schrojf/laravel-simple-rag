@@ -94,7 +94,7 @@
             <p class="text-sm text-zinc-500 mt-0.5">Entries assigned to this topic will not be deleted.</p>
         </div>
         <form method="POST" action="{{ route('topics.destroy', $topic) }}"
-              onsubmit="return confirm('Delete topic \"{{ $topic->name }}\"?')">
+              data-confirm="Delete topic &quot;{{ $topic->name }}&quot;?">
             @csrf
             @method('DELETE')
             <button type="submit"

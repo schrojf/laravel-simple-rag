@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('entries', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('type_id')->constrained('entry_types')->cascadeOnDelete();
+            $table->foreignId('type_id')->constrained('entry_types')->restrictOnDelete();
             $table->string('title');
             $table->longText('content');
             $table->json('meta')->nullable();

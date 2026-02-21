@@ -47,7 +47,9 @@ class EntryTypeController extends Controller
     {
         abort_unless($entryType->user_id === Auth::id(), 403);
 
-        return view('pages.entry-types.edit', compact('entryType'));
+        $entryCount = $entryType->entries()->count();
+
+        return view('pages.entry-types.edit', compact('entryType', 'entryCount'));
     }
 
     public function update(Request $request, EntryType $entryType): RedirectResponse
@@ -69,6 +71,11 @@ class EntryTypeController extends Controller
     public function destroy(EntryType $entryType): RedirectResponse
     {
         abort_unless($entryType->user_id === Auth::id(), 403);
+
+        if ($entryType->entries()->exists()) {
+            return redirect()->route('entry-types.edit', $entryType)
+                ->with('error', "Cannot delete \"{$entryType->name}\" — it has entries assigned to it. Reassign or delete those entries first.");
+        }
 
         $name = $entryType->name;
         $entryType->delete();

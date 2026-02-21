@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Entry;
 use App\Models\EntryType;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -111,4 +112,26 @@ test('destroy returns 403 for non-owner', function () {
         ->assertForbidden();
 
     $this->assertDatabaseHas('entry_types', ['id' => $entryType->id]);
+});
+
+test('destroy redirects to edit with error when entries are assigned', function () {
+    $entryType = EntryType::factory()->for($this->user)->create();
+    Entry::factory()->for($this->user)->for($entryType, 'type')->create();
+
+    $this->actingAs($this->user)
+        ->delete(route('entry-types.destroy', $entryType))
+        ->assertRedirect(route('entry-types.edit', $entryType))
+        ->assertSessionHas('error');
+
+    $this->assertDatabaseHas('entry_types', ['id' => $entryType->id]);
+});
+
+test('destroy succeeds when no entries are assigned', function () {
+    $entryType = EntryType::factory()->for($this->user)->create();
+
+    $this->actingAs($this->user)
+        ->delete(route('entry-types.destroy', $entryType))
+        ->assertRedirect(route('entry-types.index'));
+
+    $this->assertDatabaseMissing('entry_types', ['id' => $entryType->id]);
 });

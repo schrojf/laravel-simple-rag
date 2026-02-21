@@ -54,22 +54,11 @@
                         </td>
                         <td class="px-4 py-3 text-zinc-500">{{ $topic->icon ?? '—' }}</td>
                         <td class="px-4 py-3 text-zinc-500">{{ number_format($topic->entries_count) }}</td>
-                        <td class="px-4 py-3">
-                            <div class="flex items-center justify-end gap-3">
-                                <a href="{{ route('topics.edit', $topic) }}"
-                                   class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">
-                                    Edit
-                                </a>
-                                <form method="POST" action="{{ route('topics.destroy', $topic) }}"
-                                      onsubmit="return confirm('Delete topic \"{{ $topic->name }}\"?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
-                                            class="text-sm text-red-600 hover:text-red-700 font-medium cursor-pointer">
-                                        Delete
-                                    </button>
-                                </form>
-                            </div>
+                        <td class="px-4 py-3 text-right">
+                            <a href="{{ route('topics.edit', $topic) }}"
+                               class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">
+                                Edit
+                            </a>
                         </td>
                     </tr>
                 @endforeach

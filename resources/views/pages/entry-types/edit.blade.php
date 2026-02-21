@@ -20,6 +20,12 @@
             </div>
         @endif
 
+        @if(session('error'))
+            <div class="mb-4 bg-amber-50 border border-amber-200 text-amber-800 text-sm rounded-lg px-4 py-3">
+                {{ session('error') }}
+            </div>
+        @endif
+
         <form method="POST" action="{{ route('entry-types.update', $entryType) }}" class="space-y-4">
             @csrf
             @method('PUT')
@@ -88,20 +94,32 @@
     <div class="px-6 py-5 border-b border-red-100">
         <h2 class="text-base font-medium text-red-700">Danger zone</h2>
     </div>
-    <div class="px-6 py-5 flex items-center justify-between">
+    <div class="px-6 py-5 flex items-center justify-between gap-4">
         <div>
             <p class="text-sm font-medium text-zinc-900">Delete this type</p>
-            <p class="text-sm text-zinc-500 mt-0.5">This will also delete all entries of this type.</p>
+            @if($entryCount > 0)
+                <p class="text-sm text-zinc-500 mt-0.5">
+                    Cannot delete — {{ $entryCount }} {{ Str::plural('entry', $entryCount) }} assigned. Reassign or delete them first.
+                </p>
+            @else
+                <p class="text-sm text-zinc-500 mt-0.5">No entries assigned. This type can be safely deleted.</p>
+            @endif
         </div>
-        <form method="POST" action="{{ route('entry-types.destroy', $entryType) }}"
-              onsubmit="return confirm('Delete entry type \"{{ $entryType->name }}\"?')">
-            @csrf
-            @method('DELETE')
-            <button type="submit"
-                    class="bg-red-600 hover:bg-red-700 text-white font-medium text-sm py-2 px-4 rounded-lg transition-colors cursor-pointer">
+        @if($entryCount > 0)
+            <span class="bg-zinc-100 text-zinc-400 font-medium text-sm py-2 px-4 rounded-lg cursor-not-allowed shrink-0">
                 Delete
-            </button>
-        </form>
+            </span>
+        @else
+            <form method="POST" action="{{ route('entry-types.destroy', $entryType) }}"
+                  data-confirm="Delete entry type &quot;{{ $entryType->name }}&quot;?">
+                @csrf
+                @method('DELETE')
+                <button type="submit"
+                        class="bg-red-600 hover:bg-red-700 text-white font-medium text-sm py-2 px-4 rounded-lg transition-colors cursor-pointer">
+                    Delete
+                </button>
+            </form>
+        @endif
     </div>
 </div>
 @endsection

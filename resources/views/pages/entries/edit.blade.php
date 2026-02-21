@@ -132,7 +132,7 @@
             <p class="text-sm text-zinc-500 mt-0.5">This action cannot be undone.</p>
         </div>
         <form method="POST" action="{{ route('entries.destroy', $entry) }}"
-              onsubmit="return confirm('Delete entry \"{{ addslashes($entry->title) }}\"?')">
+              data-confirm="Delete entry &quot;{{ $entry->title }}&quot;?">
             @csrf
             @method('DELETE')
             <button type="submit"
