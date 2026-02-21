@@ -11,7 +11,9 @@ return new class extends Migration
         Schema::create('entry_topic', function (Blueprint $table) {
             $table->foreignId('entry_id')->constrained()->cascadeOnDelete();
             $table->foreignId('topic_id')->constrained()->cascadeOnDelete();
+
             $table->primary(['entry_id', 'topic_id']);
+            $table->index('topic_id');
         });
     }
 

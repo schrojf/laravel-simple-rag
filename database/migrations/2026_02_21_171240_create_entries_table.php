@@ -16,6 +16,9 @@ return new class extends Migration
             $table->longText('content');
             $table->json('meta')->nullable();
             $table->timestamps();
+
+            $table->index(['user_id', 'created_at']);
+            $table->index('type_id');
         });
     }
 

@@ -15,6 +15,8 @@ return new class extends Migration
             $table->string('color')->nullable();
             $table->string('icon')->nullable();
             $table->timestamps();
+
+            $table->unique(['user_id', 'name']);
         });
     }
 
