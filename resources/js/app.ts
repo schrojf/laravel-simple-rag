@@ -3,6 +3,7 @@ import './bootstrap';
 const pages = {
     dashboardPage: () => import('./pages/dashboard'),
     adminInvitationCodesPage: () => import('./pages/admin/invitation-codes'),
+    entriesEditorPage: () => import('./pages/entries/editor'),
     // Add more pages here...
 };
 
