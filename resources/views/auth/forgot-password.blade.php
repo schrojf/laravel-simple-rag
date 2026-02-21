@@ -28,7 +28,7 @@
                 autofocus
                 autocomplete="email"
                 placeholder="you@example.com"
-                class="w-full border @error('email') border-red-500 @else border-zinc-300 @enderror rounded-lg px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                class="w-full border @error('email') border-red-500 @else border-zinc-300 @enderror rounded-lg px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:ring-2 focus:ring-indigo-500"
             >
             @error('email')
                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>

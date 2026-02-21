@@ -32,7 +32,7 @@
                     name="name"
                     value="{{ old('name', $entryType->name) }}"
                     autocomplete="off"
-                    class="w-full border @error('name') border-red-500 @else border-zinc-300 @enderror rounded-lg px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    class="w-full border @error('name') border-red-500 @else border-zinc-300 @enderror rounded-lg px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:ring-2 focus:ring-indigo-500"
                 >
                 @error('name')
                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
@@ -48,7 +48,7 @@
                     value="{{ old('color', $entryType->color) }}"
                     placeholder="#6366f1"
                     autocomplete="off"
-                    class="w-full border @error('color') border-red-500 @else border-zinc-300 @enderror rounded-lg px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    class="w-full border @error('color') border-red-500 @else border-zinc-300 @enderror rounded-lg px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 font-mono focus:ring-2 focus:ring-indigo-500"
                 >
                 @error('color')
                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
@@ -63,7 +63,7 @@
                     name="icon"
                     value="{{ old('icon', $entryType->icon) }}"
                     autocomplete="off"
-                    class="w-full border @error('icon') border-red-500 @else border-zinc-300 @enderror rounded-lg px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    class="w-full border @error('icon') border-red-500 @else border-zinc-300 @enderror rounded-lg px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:ring-2 focus:ring-indigo-500"
                 >
                 @error('icon')
                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>

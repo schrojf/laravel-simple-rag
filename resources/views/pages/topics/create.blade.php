@@ -27,7 +27,7 @@
                     value="{{ old('name') }}"
                     placeholder="e.g. Programming, Personal, TV Shows"
                     autocomplete="off"
-                    class="w-full border @error('name') border-red-500 @else border-zinc-300 @enderror rounded-lg px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    class="w-full border @error('name') border-red-500 @else border-zinc-300 @enderror rounded-lg px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:ring-2 focus:ring-indigo-500"
                 >
                 @error('name')
                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
@@ -43,7 +43,7 @@
                     value="{{ old('color') }}"
                     placeholder="#6366f1"
                     autocomplete="off"
-                    class="w-full border @error('color') border-red-500 @else border-zinc-300 @enderror rounded-lg px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    class="w-full border @error('color') border-red-500 @else border-zinc-300 @enderror rounded-lg px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 font-mono focus:ring-2 focus:ring-indigo-500"
                 >
                 <p class="mt-1.5 text-xs text-zinc-400">Optional hex color for UI display.</p>
                 @error('color')
@@ -60,7 +60,7 @@
                     value="{{ old('icon') }}"
                     placeholder="e.g. tag, folder, star"
                     autocomplete="off"
-                    class="w-full border @error('icon') border-red-500 @else border-zinc-300 @enderror rounded-lg px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    class="w-full border @error('icon') border-red-500 @else border-zinc-300 @enderror rounded-lg px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:ring-2 focus:ring-indigo-500"
                 >
                 @error('icon')
                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>

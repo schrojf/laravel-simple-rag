@@ -25,10 +25,10 @@
         name="search"
         value="{{ request('search') }}"
         placeholder="Search entries…"
-        class="border border-zinc-300 rounded-lg px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent w-56"
+        class="border border-zinc-300 rounded-lg px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:ring-2 focus:ring-indigo-500 w-56"
     >
 
-    <select name="type_id" class="border border-zinc-300 rounded-lg px-3 py-2 text-sm text-zinc-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+    <select name="type_id" class="border border-zinc-300 rounded-lg pl-3 pr-10 py-2 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-500">
         <option value="">All types</option>
         @foreach($entryTypes as $entryType)
             <option value="{{ $entryType->id }}" @selected(request('type_id') == $entryType->id)>
@@ -37,7 +37,7 @@
         @endforeach
     </select>
 
-    <select name="topic_id" class="border border-zinc-300 rounded-lg px-3 py-2 text-sm text-zinc-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+    <select name="topic_id" class="border border-zinc-300 rounded-lg pl-3 pr-10 py-2 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-500">
         <option value="">All topics</option>
         @foreach($topics as $topic)
             <option value="{{ $topic->id }}" @selected(request('topic_id') == $topic->id)>

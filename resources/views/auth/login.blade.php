@@ -28,7 +28,7 @@
                 autofocus
                 autocomplete="email"
                 placeholder="you@example.com"
-                class="w-full border @error('email') border-red-500 @else border-zinc-300 @enderror rounded-lg px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                class="w-full border @error('email') border-red-500 @else border-zinc-300 @enderror rounded-lg px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:ring-2 focus:ring-indigo-500"
             >
             @error('email')
                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
@@ -51,7 +51,7 @@
                 required
                 autocomplete="current-password"
                 placeholder="••••••••"
-                class="w-full border @error('password') border-red-500 @else border-zinc-300 @enderror rounded-lg px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                class="w-full border @error('password') border-red-500 @else border-zinc-300 @enderror rounded-lg px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:ring-2 focus:ring-indigo-500"
             >
             @error('password')
                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
@@ -63,7 +63,7 @@
                 type="checkbox"
                 id="remember"
                 name="remember"
-                class="h-4 w-4 rounded border-zinc-300 text-indigo-600 focus:ring-indigo-500"
+                class="h-4 w-4 rounded text-indigo-600 focus:ring-indigo-500"
             >
             <label for="remember" class="text-sm text-zinc-600">Remember me</label>
         </div>

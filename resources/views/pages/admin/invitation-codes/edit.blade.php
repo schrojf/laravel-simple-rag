@@ -68,7 +68,7 @@
                     name="description"
                     rows="3"
                     placeholder="Optional note about this code's purpose"
-                    class="w-full border @error('description') border-red-500 @else border-zinc-300 @enderror rounded-lg px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
+                    class="w-full border @error('description') border-red-500 @else border-zinc-300 @enderror rounded-lg px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:ring-2 focus:ring-indigo-500 resize-none"
                 >{{ old('description', $invitationCode->description) }}</textarea>
                 @error('description')
                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
@@ -83,7 +83,7 @@
                     value="1"
                     {{ old('active', $invitationCode->active) ? 'checked' : '' }}
                     {{ $isClaimed ? 'disabled' : '' }}
-                    class="h-4 w-4 rounded border-zinc-300 text-indigo-600 focus:ring-indigo-500 {{ $isClaimed ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer' }}"
+                    class="h-4 w-4 rounded text-indigo-600 focus:ring-indigo-500 {{ $isClaimed ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer' }}"
                 >
                 <label for="active" class="text-sm font-medium text-zinc-700 {{ $isClaimed ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer' }}">
                     Active

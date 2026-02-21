@@ -26,7 +26,7 @@
                     name="title"
                     value="{{ old('title', $entry->title) }}"
                     autocomplete="off"
-                    class="w-full border @error('title') border-red-500 @else border-zinc-300 @enderror rounded-lg px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    class="w-full border @error('title') border-red-500 @else border-zinc-300 @enderror rounded-lg px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:ring-2 focus:ring-indigo-500"
                 >
                 @error('title')
                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
@@ -38,7 +38,7 @@
                 <select
                     id="type_id"
                     name="type_id"
-                    class="w-full border @error('type_id') border-red-500 @else border-zinc-300 @enderror rounded-lg px-3 py-2 text-sm text-zinc-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    class="w-full border @error('type_id') border-red-500 @else border-zinc-300 @enderror rounded-lg pl-3 pr-10 py-2 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-500"
                 >
                     <option value="">Select a type…</option>
                     @foreach($entryTypes as $entryType)
@@ -64,7 +64,7 @@
                                 name="topics[]"
                                 value="{{ $topic->id }}"
                                 @checked(in_array($topic->id, $selectedTopicIds))
-                                class="h-4 w-4 rounded border-zinc-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                                class="h-4 w-4 rounded text-indigo-600 focus:ring-indigo-500 cursor-pointer"
                             >
                             <span class="text-sm text-zinc-700">{{ $topic->name }}</span>
                         </label>
@@ -91,7 +91,7 @@
                 <textarea
                     id="content"
                     name="content"
-                    class="flex-1 w-full px-4 py-3 text-sm text-zinc-900 font-mono resize-none focus:outline-none @error('content') border border-red-500 rounded-b-xl @endif"
+                    class="flex-1 w-full px-4 py-3 text-sm text-zinc-900 font-mono resize-none border-0 shadow-none focus:outline-none focus:ring-0 @error('content') border border-red-500 rounded-b-xl @endif"
                 >{{ old('content', $entry->content) }}</textarea>
             </div>
             <div class="flex flex-col">

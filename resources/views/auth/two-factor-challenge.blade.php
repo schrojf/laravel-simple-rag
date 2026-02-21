@@ -44,7 +44,7 @@
                 autofocus
                 autocomplete="one-time-code"
                 placeholder="000000"
-                class="w-full border @error('code') border-red-500 @else border-zinc-300 @enderror rounded-lg px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent tracking-widest text-center"
+                class="w-full border @error('code') border-red-500 @else border-zinc-300 @enderror rounded-lg px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:ring-2 focus:ring-indigo-500 tracking-widest text-center"
             >
             @error('code')
                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
@@ -62,7 +62,7 @@
                 disabled
                 autocomplete="off"
                 placeholder="xxxx-xxxx-xxxx-xxxx"
-                class="w-full border @error('recovery_code') border-red-500 @else border-zinc-300 @enderror rounded-lg px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent font-mono"
+                class="w-full border @error('recovery_code') border-red-500 @else border-zinc-300 @enderror rounded-lg px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:ring-2 focus:ring-indigo-500 font-mono"
             >
             @error('recovery_code')
                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
