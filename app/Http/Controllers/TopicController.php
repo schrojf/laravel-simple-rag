@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreTopicRequest;
-use App\Http\Requests\UpdateTopicRequest;
 use App\Models\Topic;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class TopicController extends Controller
@@ -27,17 +26,21 @@ class TopicController extends Controller
         return view('pages.topics.create');
     }
 
-    public function store(StoreTopicRequest $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:100'],
+            'color' => ['nullable', 'string', 'max:20'],
+            'icon' => ['nullable', 'string', 'max:50'],
+        ]);
+
         Topic::create([
             'user_id' => Auth::id(),
-            'name' => $request->input('name'),
-            'color' => $request->input('color'),
-            'icon' => $request->input('icon'),
+            ...$validated,
         ]);
 
         return redirect()->route('topics.index')
-            ->with('success', "Topic \"{$request->input('name')}\" created successfully.");
+            ->with('success', "Topic \"{$validated['name']}\" created successfully.");
     }
 
     public function edit(Topic $topic): View
@@ -47,15 +50,17 @@ class TopicController extends Controller
         return view('pages.topics.edit', compact('topic'));
     }
 
-    public function update(UpdateTopicRequest $request, Topic $topic): RedirectResponse
+    public function update(Request $request, Topic $topic): RedirectResponse
     {
         abort_unless($topic->user_id === Auth::id(), 403);
 
-        $topic->update([
-            'name' => $request->input('name'),
-            'color' => $request->input('color'),
-            'icon' => $request->input('icon'),
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:100'],
+            'color' => ['nullable', 'string', 'max:20'],
+            'icon' => ['nullable', 'string', 'max:50'],
         ]);
+
+        $topic->update($validated);
 
         return redirect()->route('topics.index')
             ->with('success', "Topic \"{$topic->name}\" updated successfully.");

@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreEntryRequest;
-use App\Http\Requests\UpdateEntryRequest;
 use App\Models\Entry;
 use App\Models\EntryType;
 use App\Models\Topic;
@@ -55,16 +53,24 @@ class EntryController extends Controller
         return view('pages.entries.create', compact('entryTypes', 'topics'));
     }
 
-    public function store(StoreEntryRequest $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
-        $entry = Entry::create([
-            'user_id' => Auth::id(),
-            'type_id' => $request->integer('type_id'),
-            'title' => $request->input('title'),
-            'content' => $request->input('content'),
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:500'],
+            'content' => ['required', 'string'],
+            'type_id' => ['required', 'integer', 'exists:entry_types,id'],
+            'topics' => ['nullable', 'array'],
+            'topics.*' => ['integer', 'exists:topics,id'],
         ]);
 
-        $entry->topics()->sync($request->input('topics', []));
+        $entry = Entry::create([
+            'user_id' => Auth::id(),
+            'type_id' => $validated['type_id'],
+            'title' => $validated['title'],
+            'content' => $validated['content'],
+        ]);
+
+        $entry->topics()->sync($validated['topics'] ?? []);
 
         return redirect()->route('entries.show', $entry)
             ->with('success', 'Entry created successfully.');
@@ -81,17 +87,25 @@ class EntryController extends Controller
         return view('pages.entries.edit', compact('entry', 'entryTypes', 'topics'));
     }
 
-    public function update(UpdateEntryRequest $request, Entry $entry): RedirectResponse
+    public function update(Request $request, Entry $entry): RedirectResponse
     {
         abort_unless($entry->user_id === Auth::id(), 403);
 
-        $entry->update([
-            'type_id' => $request->integer('type_id'),
-            'title' => $request->input('title'),
-            'content' => $request->input('content'),
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:500'],
+            'content' => ['required', 'string'],
+            'type_id' => ['required', 'integer', 'exists:entry_types,id'],
+            'topics' => ['nullable', 'array'],
+            'topics.*' => ['integer', 'exists:topics,id'],
         ]);
 
-        $entry->topics()->sync($request->input('topics', []));
+        $entry->update([
+            'type_id' => $validated['type_id'],
+            'title' => $validated['title'],
+            'content' => $validated['content'],
+        ]);
+
+        $entry->topics()->sync($validated['topics'] ?? []);
 
         return redirect()->route('entries.show', $entry)
             ->with('success', 'Entry updated successfully.');

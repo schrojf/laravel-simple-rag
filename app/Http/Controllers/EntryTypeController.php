@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreEntryTypeRequest;
-use App\Http\Requests\UpdateEntryTypeRequest;
 use App\Models\EntryType;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class EntryTypeController extends Controller
@@ -27,17 +26,21 @@ class EntryTypeController extends Controller
         return view('pages.entry-types.create');
     }
 
-    public function store(StoreEntryTypeRequest $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:100'],
+            'color' => ['nullable', 'string', 'max:20'],
+            'icon' => ['nullable', 'string', 'max:50'],
+        ]);
+
         EntryType::create([
             'user_id' => Auth::id(),
-            'name' => $request->input('name'),
-            'color' => $request->input('color'),
-            'icon' => $request->input('icon'),
+            ...$validated,
         ]);
 
         return redirect()->route('entry-types.index')
-            ->with('success', "Entry type \"{$request->input('name')}\" created successfully.");
+            ->with('success', "Entry type \"{$validated['name']}\" created successfully.");
     }
 
     public function edit(EntryType $entryType): View
@@ -47,15 +50,17 @@ class EntryTypeController extends Controller
         return view('pages.entry-types.edit', compact('entryType'));
     }
 
-    public function update(UpdateEntryTypeRequest $request, EntryType $entryType): RedirectResponse
+    public function update(Request $request, EntryType $entryType): RedirectResponse
     {
         abort_unless($entryType->user_id === Auth::id(), 403);
 
-        $entryType->update([
-            'name' => $request->input('name'),
-            'color' => $request->input('color'),
-            'icon' => $request->input('icon'),
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:100'],
+            'color' => ['nullable', 'string', 'max:20'],
+            'icon' => ['nullable', 'string', 'max:50'],
         ]);
+
+        $entryType->update($validated);
 
         return redirect()->route('entry-types.index')
             ->with('success', "Entry type \"{$entryType->name}\" updated successfully.");
