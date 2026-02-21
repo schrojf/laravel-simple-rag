@@ -41,8 +41,8 @@
         <h2 class="text-base font-medium text-zinc-900">Content</h2>
         <span class="text-xs text-zinc-400">Updated {{ $entry->updated_at->format('Y-m-d H:i') }}</span>
     </div>
-    <div class="px-6 py-5 prose prose-zinc prose-sm max-w-none" id="entryContent" data-content="{{ $entry->content }}">
-        <pre class="whitespace-pre-wrap text-sm text-zinc-700 font-sans">{{ $entry->content }}</pre>
+    <div class="px-6 py-5 prose prose-zinc max-w-none">
+        {!! $renderedContent !!}
     </div>
 </div>
 @endsection
