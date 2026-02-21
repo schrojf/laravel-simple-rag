@@ -136,4 +136,17 @@ return [
 
     'require_invitation' => env('APP_REQUIRE_INVITATION', false),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Seed Default Content for New Users
+    |--------------------------------------------------------------------------
+    |
+    | When enabled, new users will receive a set of default entry types,
+    | topics, and sample entries upon registration so the app is not empty
+    | on first login. Set to false to disable this behaviour.
+    |
+    */
+
+    'seed_default_content' => env('APP_SEED_DEFAULT_CONTENT', true),
+
 ];

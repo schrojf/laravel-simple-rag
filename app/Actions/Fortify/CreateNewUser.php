@@ -2,6 +2,7 @@
 
 namespace App\Actions\Fortify;
 
+use App\Actions\SeedDefaultUserContent;
 use App\Models\InvitationCode;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -70,6 +71,10 @@ class CreateNewUser implements CreatesNewUsers
                 $invitation->used_at = now();
                 $invitation->used_by = $user->id;
                 $invitation->save();
+            }
+
+            if (config('app.seed_default_content')) {
+                app(SeedDefaultUserContent::class)->seed($user);
             }
 
             return $user;
