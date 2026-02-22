@@ -149,4 +149,18 @@ return [
 
     'seed_default_content' => env('APP_SEED_DEFAULT_CONTENT', true),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Show Landing Page Details
+    |--------------------------------------------------------------------------
+    |
+    | When enabled, the public landing page will display a brief feature
+    | overview section below the main hero. When disabled, the page shows
+    | only the application name and a login prompt — revealing nothing about
+    | the application's purpose.
+    |
+    */
+
+    'show_landing_details' => env('APP_SHOW_LANDING_DETAILS', false),
+
 ];
