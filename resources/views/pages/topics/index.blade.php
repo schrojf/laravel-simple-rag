@@ -28,42 +28,44 @@
             </a>
         </div>
     @else
-        <table class="w-full text-sm">
-            <thead>
-                <tr class="border-b border-zinc-200 bg-zinc-50">
-                    <th class="px-4 py-3 text-left font-medium text-zinc-500 uppercase tracking-wider text-xs">Name</th>
-                    <th class="px-4 py-3 text-left font-medium text-zinc-500 uppercase tracking-wider text-xs">Color</th>
-                    <th class="px-4 py-3 text-left font-medium text-zinc-500 uppercase tracking-wider text-xs">Icon</th>
-                    <th class="px-4 py-3 text-left font-medium text-zinc-500 uppercase tracking-wider text-xs">Entries</th>
-                    <th class="px-4 py-3"></th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-zinc-100">
-                @foreach($topics as $topic)
-                    <tr class="hover:bg-zinc-50 transition-colors">
-                        <td class="px-4 py-3 font-medium text-zinc-900">{{ $topic->name }}</td>
-                        <td class="px-4 py-3">
-                            @if($topic->color)
-                                <div class="flex items-center gap-2">
-                                    <span class="inline-block h-4 w-4 rounded border border-zinc-200" style="background-color: {{ $topic->color }}"></span>
-                                    <span class="text-zinc-500 font-mono text-xs">{{ $topic->color }}</span>
-                                </div>
-                            @else
-                                <span class="text-zinc-400">—</span>
-                            @endif
-                        </td>
-                        <td class="px-4 py-3 text-zinc-500">{{ $topic->icon ?? '—' }}</td>
-                        <td class="px-4 py-3 text-zinc-500">{{ number_format($topic->entries_count) }}</td>
-                        <td class="px-4 py-3 text-right">
-                            <a href="{{ route('topics.edit', $topic) }}"
-                               class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">
-                                Edit
-                            </a>
-                        </td>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b border-zinc-200 bg-zinc-50">
+                        <th class="px-4 py-3 text-left font-medium text-zinc-500 uppercase tracking-wider text-xs">Name</th>
+                        <th class="hidden sm:table-cell px-4 py-3 text-left font-medium text-zinc-500 uppercase tracking-wider text-xs">Color</th>
+                        <th class="px-4 py-3 text-left font-medium text-zinc-500 uppercase tracking-wider text-xs">Icon</th>
+                        <th class="hidden sm:table-cell px-4 py-3 text-left font-medium text-zinc-500 uppercase tracking-wider text-xs">Entries</th>
+                        <th class="px-4 py-3"></th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </thead>
+                <tbody class="divide-y divide-zinc-100">
+                    @foreach($topics as $topic)
+                        <tr class="hover:bg-zinc-50 transition-colors">
+                            <td class="px-4 py-3 font-medium text-zinc-900">{{ $topic->name }}</td>
+                            <td class="hidden sm:table-cell px-4 py-3">
+                                @if($topic->color)
+                                    <div class="flex items-center gap-2">
+                                        <span class="inline-block h-4 w-4 rounded border border-zinc-200" style="background-color: {{ $topic->color }}"></span>
+                                        <span class="text-zinc-500 font-mono text-xs">{{ $topic->color }}</span>
+                                    </div>
+                                @else
+                                    <span class="text-zinc-400">—</span>
+                                @endif
+                            </td>
+                            <td class="px-4 py-3 text-zinc-500">{{ $topic->icon ?? '—' }}</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-zinc-500">{{ number_format($topic->entries_count) }}</td>
+                            <td class="px-4 py-3 text-right">
+                                <a href="{{ route('topics.edit', $topic) }}"
+                                   class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">
+                                    Edit
+                                </a>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
 
         @if($topics->hasPages())
             <div class="px-4 py-3 border-t border-zinc-100">

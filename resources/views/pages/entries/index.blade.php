@@ -68,65 +68,68 @@
             </a>
         </div>
     @else
-        <table class="w-full text-sm">
-            <thead>
-                <tr class="border-b border-zinc-200 bg-zinc-50">
-                    <th class="px-4 py-3 text-left font-medium text-zinc-500 uppercase tracking-wider text-xs">Title</th>
-                    <th class="px-4 py-3 text-left font-medium text-zinc-500 uppercase tracking-wider text-xs">Type</th>
-                    <th class="px-4 py-3 text-left font-medium text-zinc-500 uppercase tracking-wider text-xs">Topics</th>
-                    <th class="px-4 py-3 text-left font-medium text-zinc-500 uppercase tracking-wider text-xs">Tokens</th>
-                    <th class="px-4 py-3 text-left font-medium text-zinc-500 uppercase tracking-wider text-xs">Updated</th>
-                    <th class="px-4 py-3"></th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-zinc-100">
-                @foreach($entries as $entry)
-                    <tr class="hover:bg-zinc-50 transition-colors">
-                        <td class="px-4 py-3">
-                            <a href="{{ route('entries.show', $entry) }}" class="font-medium text-zinc-900 hover:text-indigo-600 transition-colors">
-                                {{ $entry->title }}
-                            </a>
-                        </td>
-                        <td class="px-4 py-3">
-                            @if($entry->type)
-                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"
-                                      @if($entry->type->color) style="background-color: {{ $entry->type->color }}20; color: {{ $entry->type->color }}" @else class="bg-indigo-100 text-indigo-700" @endif>
-                                    {{ $entry->type->name }}
-                                </span>
-                            @endif
-                        </td>
-                        <td class="px-4 py-3">
-                            <div class="flex flex-wrap gap-1">
-                                @foreach($entry->topics as $topic)
-                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-zinc-100 text-zinc-600">
-                                        {{ $topic->name }}
-                                    </span>
-                                @endforeach
-                            </div>
-                        </td>
-                        <td class="px-4 py-3 text-zinc-400 text-xs">~{{ number_format($entry->token_estimate) }}</td>
-                        <td class="px-4 py-3 text-zinc-400">{{ $entry->updated_at->format('Y-m-d') }}</td>
-                        <td class="px-4 py-3">
-                            <div class="flex items-center justify-end gap-3">
-                                <a href="{{ route('entries.edit', $entry) }}"
-                                   class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">
-                                    Edit
-                                </a>
-                                <form method="POST" action="{{ route('entries.destroy', $entry) }}"
-                                      data-confirm="Delete entry &quot;{{ $entry->title }}&quot;?">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
-                                            class="text-sm text-red-600 hover:text-red-700 font-medium cursor-pointer">
-                                        Delete
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b border-zinc-200 bg-zinc-50">
+                        <th class="px-4 py-3 text-left font-medium text-zinc-500 uppercase tracking-wider text-xs">Title</th>
+                        <th class="px-4 py-3 text-left font-medium text-zinc-500 uppercase tracking-wider text-xs">Type</th>
+                        <th class="hidden sm:table-cell px-4 py-3 text-left font-medium text-zinc-500 uppercase tracking-wider text-xs">Topics</th>
+                        <th class="hidden sm:table-cell px-4 py-3 text-left font-medium text-zinc-500 uppercase tracking-wider text-xs">Tokens</th>
+                        <th class="hidden sm:table-cell px-4 py-3 text-left font-medium text-zinc-500 uppercase tracking-wider text-xs">Updated</th>
+                        <th class="px-4 py-3"></th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </thead>
+                <tbody class="divide-y divide-zinc-100">
+                    @foreach($entries as $entry)
+                        <tr class="hover:bg-zinc-50 transition-colors">
+                            <td class="px-4 py-3">
+                                <a href="{{ route('entries.show', $entry) }}" class="font-medium text-zinc-900 hover:text-indigo-600 transition-colors">
+                                    {{ $entry->title }}
+                                </a>
+                            </td>
+                            <td class="px-4 py-3">
+                                @if($entry->type)
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"
+                                          @if($entry->type->color) style="background-color: {{ $entry->type->color }}20; color: {{ $entry->type->color }}" @else class="bg-indigo-100 text-indigo-700" @endif>
+                                        {{ $entry->type->name }}
+                                    </span>
+                                @endif
+                            </td>
+                            <td class="hidden sm:table-cell px-4 py-3">
+                                <div class="flex flex-wrap gap-1">
+                                    @foreach($entry->topics as $topic)
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-zinc-100 text-zinc-600">
+                                            {{ $topic->name }}
+                                        </span>
+                                    @endforeach
+                                </div>
+                            </td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-zinc-400 text-xs">~{{ number_format($entry->token_estimate) }}</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-zinc-400">{{ $entry->updated_at->format('Y-m-d') }}</td>
+                            <td class="px-4 py-3">
+                                <div class="flex items-center justify-end gap-3">
+                                    <a href="{{ route('entries.edit', $entry) }}"
+                                       class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">
+                                        Edit
+                                    </a>
+                                    <form method="POST" action="{{ route('entries.destroy', $entry) }}"
+                                          class="hidden sm:block"
+                                          data-confirm="Delete entry &quot;{{ $entry->title }}&quot;?">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                                class="text-sm text-red-600 hover:text-red-700 font-medium cursor-pointer">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
 
         @if($entries->hasPages())
             <div class="px-4 py-3 border-t border-zinc-100">

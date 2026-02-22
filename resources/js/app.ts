@@ -26,7 +26,48 @@ function ready() {
         }
     });
 
-    // Here will be code which is always loaded e.g. menu bar toggle etc.
+    // User menu dropdown
+    const userMenuButton = document.getElementById('userMenuButton') as HTMLButtonElement | null;
+    const userMenuDropdown = document.getElementById('userMenuDropdown') as HTMLElement | null;
+
+    if (userMenuButton && userMenuDropdown) {
+        userMenuButton.addEventListener('click', (e: MouseEvent) => {
+            e.stopPropagation();
+            const isOpen = !userMenuDropdown.classList.contains('hidden');
+            userMenuDropdown.classList.toggle('hidden', isOpen);
+            userMenuButton.setAttribute('aria-expanded', String(!isOpen));
+        });
+
+        document.addEventListener('click', () => {
+            if (!userMenuDropdown.classList.contains('hidden')) {
+                userMenuDropdown.classList.add('hidden');
+                userMenuButton.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        document.addEventListener('keydown', (e: KeyboardEvent) => {
+            if (e.key === 'Escape' && !userMenuDropdown.classList.contains('hidden')) {
+                userMenuDropdown.classList.add('hidden');
+                userMenuButton.setAttribute('aria-expanded', 'false');
+            }
+        });
+    }
+
+    // Navigation scroll gradients
+    const navScrollArea = document.getElementById('navScrollArea') as HTMLElement | null;
+    const navFadeLeft = document.getElementById('navFadeLeft') as HTMLElement | null;
+    const navFadeRight = document.getElementById('navFadeRight') as HTMLElement | null;
+
+    if (navScrollArea && navFadeLeft && navFadeRight) {
+        const updateFades = (): void => {
+            const { scrollLeft, scrollWidth, clientWidth } = navScrollArea;
+            navFadeLeft.classList.toggle('hidden', scrollLeft <= 0);
+            navFadeRight.classList.toggle('hidden', scrollLeft + clientWidth >= scrollWidth - 1);
+        };
+
+        navScrollArea.addEventListener('scroll', updateFades, { passive: true });
+        updateFades();
+    }
 }
 
 if (document.readyState !== 'loading') {
