@@ -45,4 +45,79 @@
         {!! $renderedContent !!}
     </div>
 </div>
+
+<div class="mt-6 bg-white rounded-xl border border-zinc-200 shadow-sm">
+    <div class="px-6 py-5 border-b border-zinc-100 flex items-center justify-between">
+        <h2 class="text-base font-medium text-zinc-900">Responses ({{ $responses->total() }})</h2>
+        <div class="flex items-center gap-3 text-sm">
+            <a href="{{ request()->fullUrlWithQuery(['sort' => 'newest']) }}"
+               class="{{ $sort === 'newest' ? 'text-indigo-600 font-medium' : 'text-zinc-500 hover:text-zinc-700 transition-colors' }}">
+                Newest
+            </a>
+            <a href="{{ request()->fullUrlWithQuery(['sort' => 'oldest']) }}"
+               class="{{ $sort === 'oldest' ? 'text-indigo-600 font-medium' : 'text-zinc-500 hover:text-zinc-700 transition-colors' }}">
+                Oldest
+            </a>
+        </div>
+    </div>
+
+    @forelse($responses as $response)
+        <div class="px-6 py-5 border-b border-zinc-100 last:border-b-0">
+            <div class="prose prose-zinc prose-sm max-w-none">
+                {!! $response->rendered_content !!}
+            </div>
+            <div class="mt-3 flex items-center justify-between">
+                <span class="text-xs text-zinc-400">
+                    {{ $response->user?->name ?? 'AI' }} &middot; {{ $response->created_at->format('Y-m-d H:i') }}
+                </span>
+                <form method="POST"
+                      action="{{ route('entries.responses.destroy', [$entry, $response]) }}"
+                      data-confirm="Delete this response?">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit"
+                            class="text-xs text-red-500 hover:text-red-700 transition-colors cursor-pointer">
+                        Delete
+                    </button>
+                </form>
+            </div>
+        </div>
+    @empty
+        <div class="px-6 py-8 text-center text-sm text-zinc-400">
+            No responses yet.
+        </div>
+    @endforelse
+
+    @if($responses->hasPages())
+        <div class="px-6 py-4 border-t border-zinc-100">
+            {{ $responses->links() }}
+        </div>
+    @endif
+</div>
+
+<div class="mt-6 bg-white rounded-xl border border-zinc-200 shadow-sm">
+    <div class="px-6 py-5 border-b border-zinc-100">
+        <h2 class="text-base font-medium text-zinc-900">Add Response</h2>
+    </div>
+    <div class="px-6 py-5">
+        <form method="POST" action="{{ route('entries.responses.store', $entry) }}">
+            @csrf
+            <div class="mb-4">
+                <textarea name="content"
+                          rows="3"
+                          placeholder="Write your response in markdown..."
+                          class="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm font-mono text-zinc-900 placeholder-zinc-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none @error('content') border-red-400 @enderror">{{ old('content') }}</textarea>
+                @error('content')
+                    <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+            <div class="flex justify-end">
+                <button type="submit"
+                        class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm py-2 px-4 rounded-lg transition-colors cursor-pointer">
+                    Add Response
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 @endsection

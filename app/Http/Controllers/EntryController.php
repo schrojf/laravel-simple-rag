@@ -31,7 +31,7 @@ class EntryController extends Controller
         return view('pages.entries.index', compact('entries', 'entryTypes', 'topics'));
     }
 
-    public function show(Entry $entry): View
+    public function show(Request $request, Entry $entry): View
     {
         abort_unless($entry->user_id === Auth::id(), 403);
 
@@ -42,7 +42,15 @@ class EntryController extends Controller
             'allow_unsafe_links' => false,
         ]);
 
-        return view('pages.entries.show', compact('entry', 'renderedContent'));
+        $sort = $request->input('sort', 'newest');
+
+        $responses = $entry->responses()
+            ->with('user')
+            ->when($sort === 'oldest', fn ($q) => $q->oldest(), fn ($q) => $q->latest())
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('pages.entries.show', compact('entry', 'renderedContent', 'responses', 'sort'));
     }
 
     public function create(): View
