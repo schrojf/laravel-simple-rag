@@ -10,8 +10,10 @@ use App\Http\Controllers\McpLogController;
 use App\Http\Controllers\ResponseController;
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\ProfileController;
+use App\Http\Controllers\Settings\TwoFactorController;
 use App\Http\Controllers\TopicController;
 use Illuminate\Support\Facades\Route;
+use Laravel\Fortify\Features;
 
 Route::get('/', function () {
     return view('welcome');
@@ -21,15 +23,27 @@ Route::middleware('guest')->group(function () {
     //
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::get('logout', [LogoutPageController::class, '__invoke']);
 
+    Route::redirect('settings', 'settings/profile');
+    Route::get('settings/profile', [ProfileController::class, 'show'])->name('settings.profile');
+    Route::get('settings/password', [PasswordController::class, 'show'])->name('settings.password');
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
 
-    Route::prefix('settings')->name('settings.')->group(function () {
-        Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
-        Route::get('/password', [PasswordController::class, 'show'])->name('password');
-    });
+    Route::get('settings/two-factor', [TwoFactorController::class, 'show'])
+        ->middleware(
+            when(
+                Features::canManageTwoFactorAuthentication()
+                && Features::optionEnabled(Features::twoFactorAuthentication(), 'confirmPassword'),
+                ['password.confirm'],
+                [],
+            ),
+        )
+        ->name('two-factor.show');
 
     Route::resource('entries', EntryController::class);
     Route::resource('entries.responses', ResponseController::class)->only(['store', 'destroy']);

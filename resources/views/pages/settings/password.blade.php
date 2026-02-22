@@ -16,6 +16,10 @@
        class="pb-2.5 text-sm font-medium border-b-2 border-indigo-600 -mb-px text-zinc-900">
         Password
     </a>
+    <a href="{{ route('two-factor.show') }}"
+       class="pb-2.5 text-sm font-medium border-b-2 border-transparent -mb-px text-zinc-500 hover:text-zinc-700 transition-colors">
+        Two-Factor
+    </a>
 </div>
 
 <div class="bg-white rounded-xl border border-zinc-200 shadow-sm max-w-lg">
