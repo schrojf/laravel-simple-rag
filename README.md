@@ -1,59 +1,278 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# laravel-simple-rag — Laravel Knowledge Provider
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A self-hosted, single-user knowledge manager and MCP server. Organise your snippets, questions, documents, and context in a web UI, then expose everything to AI assistants (Claude, etc.) via the Model Context Protocol. LLMs can read your knowledge base and write answers, scraped content, and summaries back into it.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Table of Contents
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- [Features](#features)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [First-Time Setup](#first-time-setup)
+- [Using the Web UI](#using-the-web-ui)
+- [MCP Server](#mcp-server)
+  - [Authentication (OAuth2)](#authentication-oauth2)
+  - [Registering with Claude Desktop](#registering-with-claude-desktop)
+  - [Available Tools](#available-tools)
+  - [Available Prompts](#available-prompts)
+  - [Available Resources](#available-resources)
+- [Key Use Cases](#key-use-cases)
+- [Development](#development)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## Features
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+- **Web Knowledge Manager** — CRUD UI for entries (markdown), entry types, topics, and responses
+- **MCP Server** — exposes all content to LLMs via the Model Context Protocol over OAuth2
+- **Live Markdown editor** — write and preview markdown in the browser
+- **Invitation-based registration** — controlled access via invite codes
+- **Fully self-hosted** — no external dependencies beyond your own server
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## Requirements
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- PHP 8.4+
+- Composer
+- Node.js & npm
+- SQLite, MySQL, or PostgreSQL
+- (Optional) Redis for queue/cache
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## Installation
 
-## Contributing
+```bash
+# 1. Clone and install dependencies
+git clone https://github.com/your-username/laravel-simple-rag.git
+cd laravel-simple-rag
+composer install
+npm install
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+# 2. Environment setup
+cp .env.example .env
+php artisan key:generate
 
-## Code of Conduct
+# 3. Configure your database in .env, then run migrations
+php artisan migrate
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+# 4. Generate Passport OAuth2 keys (required for MCP auth)
+php artisan passport:keys
 
-## Security Vulnerabilities
+# 5. Build frontend assets
+npm run build
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+# 6. Start the development server
+composer run dev
+```
 
-## License
+> For production, deploy with Laravel Forge or any standard Laravel hosting. Run `npm run build` instead of `npm run dev`.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+
+## First-Time Setup
+
+Registration is invitation-only. Before you can create your account, generate an invitation code on the server.
+
+### 1. Generate an invitation code
+
+```bash
+php artisan invitation:manage create
+```
+
+Options:
+```
+--description=   Optional label to identify the code (e.g. "my account")
+--count=         Number of codes to generate (default: 1)
+```
+
+Example:
+```bash
+php artisan invitation:manage create --description="my account"
+```
+
+This outputs an invitation code. Keep it — you need it to register.
+
+### 2. List existing codes
+
+```bash
+php artisan invitation:manage list
+```
+
+### 3. Deactivate a code
+
+```bash
+php artisan invitation:manage deactivate --code=YOUR_CODE
+```
+
+### 4. Register your account
+
+Open your app URL in a browser and register using the invitation code. This is a one-time setup — only one account is expected.
+
+### 5. Set up your entry types
+
+After logging in, go to **Entry Types** and create the types you want to use (e.g. `question`, `snippet`, `document`, `context`). Entry types are how you and the LLM categorize knowledge.
+
+### 6. (Optional) Create topics
+
+Go to **Topics** and create topic tags (e.g. `Programming`, `Personal`, `Work`) to organise entries across types.
+
+---
+
+## Using the Web UI
+
+| Page | URL | Description |
+|------|-----|-------------|
+| Dashboard | `/dashboard` | Overview of your knowledge base |
+| Entries | `/entries` | Browse, filter, and search all entries |
+| New Entry | `/entries/create` | Create an entry with the Markdown editor |
+| Edit Entry | `/entries/{id}/edit` | Edit content and manage responses |
+| Entry Types | `/entry-types` | Manage your entry type labels |
+| Topics | `/topics` | Manage your topic tags |
+
+**Entries** are the core unit — a title, Markdown content, a type, and optional topics. **Responses** are attached to entries and represent answers or generated content (written by you or by an LLM via MCP).
+
+---
+
+## MCP Server
+
+The RAG MCP server is available at `/mcp/rag` and is protected by Laravel Passport OAuth2.
+
+### Authentication (OAuth2)
+
+The MCP server uses the standard OAuth2 flow. MCP clients (like Claude Desktop) handle authentication automatically once registered.
+
+To verify your server is working, use the built-in inspector:
+
+```bash
+# Test the RAG server interactively
+php artisan mcp:inspector rag
+```
+
+This launches the MCP Inspector and prints the client configuration to copy into your MCP client.
+
+### Registering with Claude Desktop
+
+Add the following to your Claude Desktop MCP configuration (`claude_desktop_config.json`):
+
+```json
+{
+  "mcpServers": {
+    "knowledge-base": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "https://your-app-url.com/mcp/rag"
+      ]
+    }
+  }
+}
+```
+
+Replace `https://your-app-url.com` with your actual app URL. On first connection, Claude Desktop will open a browser window to complete the OAuth2 authorization — approve it to grant access.
+
+> **Local development:** Run `php artisan mcp:inspector rag` for the exact configuration to use. The local `rag` server is also registered for stdio-based testing.
+
+### Available Tools
+
+All tools are scoped to your authenticated account.
+
+| Tool | Description |
+|------|-------------|
+| `search_entries` | Search entries by keyword, entry type ID, and/or topic ID. Returns previews with metadata. |
+| `get_entry` | Fetch a single entry by ID. Pass `with_responses: true` to include all attached responses. |
+| `get_responses` | List all responses stored for a given entry ID. |
+| `list_types` | List all your entry types with their IDs. Call this before creating entries. |
+| `list_topics` | List all your topics with their IDs. Call this before tagging entries. |
+| `create_entry` | Create a new entry. Requires `title`, `content` (Markdown), and `type_id`. Optionally pass `topic_ids`. |
+| `create_response` | Store a response linked to an entry. Requires `entry_id` and `content`. Defaults to `text/markdown`. |
+| `create_topic` | Create a new topic tag. Requires `name`. Optional `color` and `icon`. |
+| `add_topic` | Attach an existing topic to an existing entry. Requires `entry_id` and `topic_id`. |
+
+### Available Prompts
+
+Prompts are reusable instruction templates that guide the LLM through multi-step workflows using the tools above.
+
+#### `answer_question`
+
+Finds an unanswered question entry matching a query and stores an answer as a response.
+
+**Argument:** `query` (required) — topic or keywords to search for
+
+**Workflow the LLM follows:**
+1. Calls `search_entries` with the query keyword
+2. Identifies entries that look like unanswered questions
+3. Calls `get_entry` with `with_responses: true` to check for existing answers
+4. Composes a thorough Markdown answer
+5. Calls `create_response` to store it
+
+#### `scrape_and_store`
+
+Fetches a URL, extracts the meaningful content, and stores it as a new entry.
+
+**Arguments:**
+- `url` (required) — the page to fetch
+- `type_id` (optional) — entry type to use; if omitted, the LLM calls `list_types` first
+
+**Workflow the LLM follows:**
+1. Fetches the URL content
+2. Extracts title and body (skips navigation, ads, footers)
+3. Formats as clean Markdown
+4. Calls `create_entry` to store it
+
+### Available Resources
+
+| Resource | URI Template | Description |
+|----------|-------------|-------------|
+| Entry | `entry://entries/{id}` | Returns the full Markdown content of an entry, including its type and topics. |
+
+---
+
+## Key Use Cases
+
+### Q&A Flow
+1. Create an entry with type `question` and your question as the title/content.
+2. Ask your AI assistant to use the `answer_question` prompt with a matching keyword.
+3. The LLM searches for the question, writes an answer, and stores it as a response.
+4. Review and edit the response in the web UI.
+
+### Web Scraping Flow
+1. Tell your AI assistant to use the `scrape_and_store` prompt with a URL.
+2. The LLM fetches the page, converts it to Markdown, and creates an entry.
+3. The entry appears in your knowledge base immediately.
+
+### Knowledge Retrieval
+- Use `search_entries` with keywords or type/topic filters to find relevant context.
+- Use `get_entry` with `with_responses: true` to pull a complete entry with all its stored answers.
+- Access any entry directly via the `entry://entries/{id}` resource URI.
+
+---
+
+## Development
+
+```bash
+# Run the development server (Vite + PHP server + queue worker)
+composer run dev
+
+# Run tests
+php artisan test --compact
+
+# Test the RAG MCP server interactively
+php artisan mcp:inspector rag
+
+# Format PHP code
+vendor/bin/pint
+
+# Run static analysis
+vendor/bin/phpstan analyse
+```
+
+### Invitation management reference
+
+```bash
+php artisan invitation:manage create [--description=] [--count=]
+php artisan invitation:manage list
+php artisan invitation:manage deactivate --code=CODE
+```
