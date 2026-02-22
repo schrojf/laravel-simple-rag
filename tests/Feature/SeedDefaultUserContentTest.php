@@ -3,10 +3,12 @@
 use App\Actions\SeedDefaultUserContent;
 use App\Models\Entry;
 use App\Models\EntryType;
+use App\Models\Response;
 use App\Models\Topic;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
-uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
+uses(RefreshDatabase::class);
 
 it('seeds default entry types for the user', function () {
     $user = User::factory()->create();
@@ -14,7 +16,7 @@ it('seeds default entry types for the user', function () {
     app(SeedDefaultUserContent::class)->seed($user);
 
     expect(EntryType::where('user_id', $user->id)->pluck('name')->sort()->values()->all())
-        ->toBe(['Article', 'Note', 'Reference', 'Snippet']);
+        ->toBe(['Article', 'Note', 'Question', 'Reference', 'Snippet']);
 });
 
 it('seeds default topics for the user', function () {
@@ -23,7 +25,7 @@ it('seeds default topics for the user', function () {
     app(SeedDefaultUserContent::class)->seed($user);
 
     expect(Topic::where('user_id', $user->id)->pluck('name')->sort()->values()->all())
-        ->toBe(['AI & Machine Learning', 'General', 'Productivity', 'Programming']);
+        ->toBe(['AI & Machine Learning', 'DevOps', 'General', 'Laravel', 'Productivity', 'Programming']);
 });
 
 it('seeds default entries for the user', function () {
@@ -31,7 +33,16 @@ it('seeds default entries for the user', function () {
 
     app(SeedDefaultUserContent::class)->seed($user);
 
-    expect(Entry::where('user_id', $user->id)->count())->toBe(3);
+    expect(Entry::where('user_id', $user->id)->count())->toBe(11);
+});
+
+it('seeds responses for entries that have them', function () {
+    $user = User::factory()->create();
+
+    app(SeedDefaultUserContent::class)->seed($user);
+
+    // Four entries have pre-seeded responses
+    expect(Response::whereHas('entry', fn ($q) => $q->where('user_id', $user->id))->count())->toBe(4);
 });
 
 it('attaches topics to seeded entries', function () {
