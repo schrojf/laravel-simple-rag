@@ -22,6 +22,24 @@
     </a>
 </div>
 
+@if ($hasUnverifiedEmail)
+    <div class="bg-amber-50 border border-amber-200 rounded-xl shadow-sm max-w-lg mb-4 px-6 py-5">
+        <p class="text-sm font-medium text-amber-800">Your email address is unverified.</p>
+        @if (session('status') === 'verification-link-sent')
+            <p class="text-sm text-green-700 mt-1">
+                A new verification link has been sent to your email address.
+            </p>
+        @else
+            <form method="POST" action="{{ route('verification.send') }}" class="mt-2">
+                @csrf
+                <button type="submit" class="text-sm text-amber-700 hover:text-amber-900 underline cursor-pointer">
+                    Re-send the verification email.
+                </button>
+            </form>
+        @endif
+    </div>
+@endif
+
 <div class="bg-white rounded-xl border border-zinc-200 shadow-sm max-w-lg">
     <div class="px-6 py-5 border-b border-zinc-100">
         <h2 class="text-base font-medium text-zinc-900">Profile information</h2>
