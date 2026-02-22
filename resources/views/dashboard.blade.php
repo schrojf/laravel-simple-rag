@@ -8,7 +8,7 @@
     <p class="text-sm text-zinc-500 mt-1">Welcome back, {{ auth()->user()->name }}.</p>
 </div>
 
-<!-- Welcome card -->
+{{-- Welcome card --}}
 <div class="bg-white rounded-xl border border-zinc-200 shadow-sm p-6 mb-6">
     <div class="flex items-start gap-4">
         <div class="h-10 w-10 rounded-lg bg-indigo-50 flex items-center justify-center shrink-0">
@@ -35,25 +35,108 @@
     </div>
 </div>
 
-<!-- Placeholder stat cards -->
-<div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+{{-- Stat cards --}}
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
     <div class="bg-white rounded-xl border border-zinc-200 shadow-sm p-5">
-        <p class="text-xs font-medium text-zinc-500 uppercase tracking-widest mb-2">Documents</p>
-        <p class="text-3xl font-semibold text-zinc-900">—</p>
+        <p class="text-xs font-medium text-zinc-500 uppercase tracking-widest mb-2">Entries</p>
+        <p class="text-3xl font-semibold text-zinc-900">{{ number_format($entryCount) }}</p>
         <p class="text-sm text-zinc-400 mt-1">Knowledge entries</p>
     </div>
 
     <div class="bg-white rounded-xl border border-zinc-200 shadow-sm p-5">
-        <p class="text-xs font-medium text-zinc-500 uppercase tracking-widest mb-2">Snippets</p>
-        <p class="text-3xl font-semibold text-zinc-900">—</p>
-        <p class="text-sm text-zinc-400 mt-1">Context snippets</p>
+        <p class="text-xs font-medium text-zinc-500 uppercase tracking-widest mb-2">Responses</p>
+        <p class="text-3xl font-semibold text-zinc-900">{{ number_format($responseCount) }}</p>
+        <p class="text-sm text-zinc-400 mt-1">AI responses stored</p>
     </div>
 
     <div class="bg-white rounded-xl border border-zinc-200 shadow-sm p-5">
-        <p class="text-xs font-medium text-zinc-500 uppercase tracking-widest mb-2">Queries</p>
-        <p class="text-3xl font-semibold text-zinc-900">—</p>
-        <p class="text-sm text-zinc-400 mt-1">LLM interactions</p>
+        <p class="text-xs font-medium text-zinc-500 uppercase tracking-widest mb-2">MCP Calls</p>
+        <p class="text-3xl font-semibold text-zinc-900">{{ number_format($mcpLogCount) }}</p>
+        <p class="text-sm text-zinc-400 mt-1">Tool &amp; prompt calls</p>
     </div>
+</div>
+
+{{-- Recent activity --}}
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+    {{-- Recent Entries --}}
+    <div class="bg-white rounded-xl border border-zinc-200 shadow-sm overflow-hidden">
+        <div class="px-5 py-4 border-b border-zinc-100 flex items-center justify-between">
+            <p class="text-sm font-medium text-zinc-900">Recent Entries</p>
+            <a href="{{ route('entries.index') }}" class="text-xs text-indigo-600 hover:text-indigo-700 font-medium">
+                View all →
+            </a>
+        </div>
+        @if($recentEntries->isEmpty())
+            <div class="px-5 py-8 text-center">
+                <p class="text-sm text-zinc-500">No entries yet.</p>
+                <a href="{{ route('entries.create') }}" class="mt-2 inline-block text-sm text-indigo-600 hover:text-indigo-700 font-medium">
+                    Create your first entry
+                </a>
+            </div>
+        @else
+            <ul class="divide-y divide-zinc-100">
+                @foreach($recentEntries as $entry)
+                    <li class="px-5 py-3 flex items-center justify-between gap-3 hover:bg-zinc-50 transition-colors">
+                        <div class="flex items-center gap-2 min-w-0">
+                            @if($entry->type)
+                                <span class="shrink-0 inline-flex items-center rounded px-1.5 py-0.5 text-xs font-medium"
+                                      @if($entry->type->color)
+                                          style="background-color: {{ $entry->type->color }}20; color: {{ $entry->type->color }}"
+                                      @else
+                                          style="background-color: #e4e4e7; color: #52525b"
+                                      @endif>
+                                    {{ $entry->type->name }}
+                                </span>
+                            @endif
+                            <a href="{{ route('entries.show', $entry) }}"
+                               class="text-sm text-zinc-900 hover:text-indigo-600 truncate transition-colors">
+                                {{ $entry->title }}
+                            </a>
+                        </div>
+                        <span class="text-xs text-zinc-400 whitespace-nowrap shrink-0">{{ $entry->updated_at->diffForHumans() }}</span>
+                    </li>
+                @endforeach
+            </ul>
+        @endif
+    </div>
+
+    {{-- Recent MCP Calls --}}
+    <div class="bg-white rounded-xl border border-zinc-200 shadow-sm overflow-hidden">
+        <div class="px-5 py-4 border-b border-zinc-100 flex items-center justify-between">
+            <p class="text-sm font-medium text-zinc-900">Recent MCP Calls</p>
+            <a href="{{ route('mcp-logs.index') }}" class="text-xs text-indigo-600 hover:text-indigo-700 font-medium">
+                View all →
+            </a>
+        </div>
+        @if($recentMcpLogs->isEmpty())
+            <div class="px-5 py-8 text-center">
+                <p class="text-sm text-zinc-500">No MCP calls yet.</p>
+            </div>
+        @else
+            @php
+                $mcpBadgeColors = [
+                    'tool'     => 'bg-indigo-50 text-indigo-700',
+                    'prompt'   => 'bg-amber-50 text-amber-700',
+                    'resource' => 'bg-emerald-50 text-emerald-700',
+                ];
+            @endphp
+            <ul class="divide-y divide-zinc-100">
+                @foreach($recentMcpLogs as $log)
+                    <li class="px-5 py-3 flex items-center justify-between gap-3 hover:bg-zinc-50 transition-colors">
+                        <div class="flex items-center gap-2 min-w-0">
+                            <span class="shrink-0 inline-flex items-center rounded px-1.5 py-0.5 text-xs font-medium {{ $mcpBadgeColors[$log->primitive_type] ?? 'bg-zinc-100 text-zinc-600' }}">
+                                {{ $log->primitive_type }}
+                            </span>
+                            <span class="text-sm text-zinc-700 truncate">{{ $log->primitive_name }}</span>
+                        </div>
+                        <span class="text-xs text-zinc-400 whitespace-nowrap shrink-0">{{ $log->created_at->diffForHumans() }}</span>
+                    </li>
+                @endforeach
+            </ul>
+        @endif
+    </div>
+
 </div>
 </div>{{-- #dashboardPage --}}
 @endsection
