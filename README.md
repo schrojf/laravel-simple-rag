@@ -12,11 +12,11 @@ A self-hosted, single-user knowledge manager and MCP server. Organise your snipp
 - [First-Time Setup](#first-time-setup)
 - [Using the Web UI](#using-the-web-ui)
 - [MCP Server](#mcp-server)
-  - [Authentication (OAuth2)](#authentication-oauth2)
-  - [Registering with Claude Desktop](#registering-with-claude-desktop)
-  - [Available Tools](#available-tools)
-  - [Available Prompts](#available-prompts)
-  - [Available Resources](#available-resources)
+    - [Authentication (OAuth2)](#authentication-oauth2)
+    - [Registering with Claude Desktop](#registering-with-claude-desktop)
+    - [Available Tools](#available-tools)
+    - [Available Prompts](#available-prompts)
+    - [Available Resources](#available-resources)
 - [Key Use Cases](#key-use-cases)
 - [Development](#development)
 
@@ -83,12 +83,14 @@ php artisan invitation:manage create
 ```
 
 Options:
+
 ```
 --description=   Optional label to identify the code (e.g. "my account")
 --count=         Number of codes to generate (default: 1)
 ```
 
 Example:
+
 ```bash
 php artisan invitation:manage create --description="my account"
 ```
@@ -123,14 +125,14 @@ Go to **Topics** and create topic tags (e.g. `Programming`, `Personal`, `Work`) 
 
 ## Using the Web UI
 
-| Page | URL | Description |
-|------|-----|-------------|
-| Dashboard | `/dashboard` | Overview of your knowledge base |
-| Entries | `/entries` | Browse, filter, and search all entries |
-| New Entry | `/entries/create` | Create an entry with the Markdown editor |
-| Edit Entry | `/entries/{id}/edit` | Edit content and manage responses |
-| Entry Types | `/entry-types` | Manage your entry type labels |
-| Topics | `/topics` | Manage your topic tags |
+| Page        | URL                  | Description                              |
+| ----------- | -------------------- | ---------------------------------------- |
+| Dashboard   | `/dashboard`         | Overview of your knowledge base          |
+| Entries     | `/entries`           | Browse, filter, and search all entries   |
+| New Entry   | `/entries/create`    | Create an entry with the Markdown editor |
+| Edit Entry  | `/entries/{id}/edit` | Edit content and manage responses        |
+| Entry Types | `/entry-types`       | Manage your entry type labels            |
+| Topics      | `/topics`            | Manage your topic tags                   |
 
 **Entries** are the core unit — a title, Markdown content, a type, and optional topics. **Responses** are attached to entries and represent answers or generated content (written by you or by an LLM via MCP).
 
@@ -159,15 +161,12 @@ Add the following to your Claude Desktop MCP configuration (`claude_desktop_conf
 
 ```json
 {
-  "mcpServers": {
-    "knowledge-base": {
-      "command": "npx",
-      "args": [
-        "mcp-remote",
-        "https://your-app-url.com/mcp/rag"
-      ]
+    "mcpServers": {
+        "knowledge-base": {
+            "command": "npx",
+            "args": ["mcp-remote", "https://your-app-url.com/mcp/rag"]
+        }
     }
-  }
 }
 ```
 
@@ -179,17 +178,17 @@ Replace `https://your-app-url.com` with your actual app URL. On first connection
 
 All tools are scoped to your authenticated account.
 
-| Tool | Description |
-|------|-------------|
-| `search_entries` | Search entries by keyword, entry type ID, and/or topic ID. Returns previews with metadata. |
-| `get_entry` | Fetch a single entry by ID. Pass `with_responses: true` to include all attached responses. |
-| `get_responses` | List all responses stored for a given entry ID. |
-| `list_types` | List all your entry types with their IDs. Call this before creating entries. |
-| `list_topics` | List all your topics with their IDs. Call this before tagging entries. |
-| `create_entry` | Create a new entry. Requires `title`, `content` (Markdown), and `type_id`. Optionally pass `topic_ids`. |
-| `create_response` | Store a response linked to an entry. Requires `entry_id` and `content`. Defaults to `text/markdown`. |
-| `create_topic` | Create a new topic tag. Requires `name`. Optional `color` and `icon`. |
-| `add_topic` | Attach an existing topic to an existing entry. Requires `entry_id` and `topic_id`. |
+| Tool              | Description                                                                                             |
+| ----------------- | ------------------------------------------------------------------------------------------------------- |
+| `search_entries`  | Search entries by keyword, entry type ID, and/or topic ID. Returns previews with metadata.              |
+| `get_entry`       | Fetch a single entry by ID. Pass `with_responses: true` to include all attached responses.              |
+| `get_responses`   | List all responses stored for a given entry ID.                                                         |
+| `list_types`      | List all your entry types with their IDs. Call this before creating entries.                            |
+| `list_topics`     | List all your topics with their IDs. Call this before tagging entries.                                  |
+| `create_entry`    | Create a new entry. Requires `title`, `content` (Markdown), and `type_id`. Optionally pass `topic_ids`. |
+| `create_response` | Store a response linked to an entry. Requires `entry_id` and `content`. Defaults to `text/markdown`.    |
+| `create_topic`    | Create a new topic tag. Requires `name`. Optional `color` and `icon`.                                   |
+| `add_topic`       | Attach an existing topic to an existing entry. Requires `entry_id` and `topic_id`.                      |
 
 ### Available Prompts
 
@@ -202,6 +201,7 @@ Finds an unanswered question entry matching a query and stores an answer as a re
 **Argument:** `query` (required) — topic or keywords to search for
 
 **Workflow the LLM follows:**
+
 1. Calls `search_entries` with the query keyword
 2. Identifies entries that look like unanswered questions
 3. Calls `get_entry` with `with_responses: true` to check for existing answers
@@ -213,10 +213,12 @@ Finds an unanswered question entry matching a query and stores an answer as a re
 Fetches a URL, extracts the meaningful content, and stores it as a new entry.
 
 **Arguments:**
+
 - `url` (required) — the page to fetch
 - `type_id` (optional) — entry type to use; if omitted, the LLM calls `list_types` first
 
 **Workflow the LLM follows:**
+
 1. Fetches the URL content
 2. Extracts title and body (skips navigation, ads, footers)
 3. Formats as clean Markdown
@@ -224,26 +226,29 @@ Fetches a URL, extracts the meaningful content, and stores it as a new entry.
 
 ### Available Resources
 
-| Resource | URI Template | Description |
-|----------|-------------|-------------|
-| Entry | `entry://entries/{id}` | Returns the full Markdown content of an entry, including its type and topics. |
+| Resource | URI Template           | Description                                                                   |
+| -------- | ---------------------- | ----------------------------------------------------------------------------- |
+| Entry    | `entry://entries/{id}` | Returns the full Markdown content of an entry, including its type and topics. |
 
 ---
 
 ## Key Use Cases
 
 ### Q&A Flow
+
 1. Create an entry with type `question` and your question as the title/content.
 2. Ask your AI assistant to use the `answer_question` prompt with a matching keyword.
 3. The LLM searches for the question, writes an answer, and stores it as a response.
 4. Review and edit the response in the web UI.
 
 ### Web Scraping Flow
+
 1. Tell your AI assistant to use the `scrape_and_store` prompt with a URL.
 2. The LLM fetches the page, converts it to Markdown, and creates an entry.
 3. The entry appears in your knowledge base immediately.
 
 ### Knowledge Retrieval
+
 - Use `search_entries` with keywords or type/topic filters to find relevant context.
 - Use `get_entry` with `with_responses: true` to pull a complete entry with all its stored answers.
 - Access any entry directly via the `entry://entries/{id}` resource URI.
