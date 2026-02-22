@@ -2,6 +2,7 @@
 
 namespace App\Mcp\Resources;
 
+use App\Actions\LogMcpRequest;
 use App\Models\Entry;
 use Laravel\Mcp\Request;
 use Laravel\Mcp\Response;
@@ -26,8 +27,10 @@ class EntryResource extends Resource implements HasUriTemplate
     /**
      * Handle the resource request.
      */
-    public function handle(Request $request): Response
+    public function handle(Request $request, LogMcpRequest $logger): Response
     {
+        $logger->log($request, 'resource', class_basename(static::class));
+
         $id = $request->get('id');
         $user = $request->user();
 

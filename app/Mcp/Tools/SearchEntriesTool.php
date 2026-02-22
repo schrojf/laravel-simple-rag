@@ -2,6 +2,7 @@
 
 namespace App\Mcp\Tools;
 
+use App\Actions\LogMcpRequest;
 use App\Models\Entry;
 use Illuminate\Contracts\JsonSchema\JsonSchema;
 use Laravel\Mcp\Request;
@@ -15,8 +16,10 @@ class SearchEntriesTool extends Tool
     /**
      * Handle the tool request.
      */
-    public function handle(Request $request): Response
+    public function handle(Request $request, LogMcpRequest $logger): Response
     {
+        $logger->log($request, 'tool', class_basename(static::class));
+
         $validated = $request->validate([
             'keyword' => 'nullable|string|max:255',
             'type_id' => 'nullable|integer',

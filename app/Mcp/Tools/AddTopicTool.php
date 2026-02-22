@@ -2,6 +2,7 @@
 
 namespace App\Mcp\Tools;
 
+use App\Actions\LogMcpRequest;
 use App\Models\Entry;
 use App\Models\Topic;
 use Illuminate\Contracts\JsonSchema\JsonSchema;
@@ -16,8 +17,10 @@ class AddTopicTool extends Tool
     /**
      * Handle the tool request.
      */
-    public function handle(Request $request): Response
+    public function handle(Request $request, LogMcpRequest $logger): Response
     {
+        $logger->log($request, 'tool', class_basename(static::class));
+
         $validated = $request->validate([
             'entry_id' => 'required|integer',
             'topic_id' => 'required|integer',

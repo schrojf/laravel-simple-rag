@@ -2,6 +2,7 @@
 
 namespace App\Mcp\Tools;
 
+use App\Actions\LogMcpRequest;
 use Illuminate\Contracts\JsonSchema\JsonSchema;
 use Illuminate\Support\Str;
 use Laravel\Mcp\Request;
@@ -21,8 +22,10 @@ class GenerateRandomUuidTool extends Tool
     /**
      * Handle the tool request.
      */
-    public function handle(Request $request): Response|ResponseFactory
+    public function handle(Request $request, LogMcpRequest $logger): Response|ResponseFactory
     {
+        $logger->log($request, 'tool', class_basename(static::class));
+
         $version = $request->get('version', 'v4');
 
         $uuid = match ($version) {

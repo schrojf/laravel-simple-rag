@@ -2,6 +2,7 @@
 
 namespace App\Mcp\Tools;
 
+use App\Actions\LogMcpRequest;
 use App\Models\Topic;
 use Illuminate\Contracts\JsonSchema\JsonSchema;
 use Laravel\Mcp\Request;
@@ -15,8 +16,10 @@ class CreateTopicTool extends Tool
     /**
      * Handle the tool request.
      */
-    public function handle(Request $request): Response
+    public function handle(Request $request, LogMcpRequest $logger): Response
     {
+        $logger->log($request, 'tool', class_basename(static::class));
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'color' => 'nullable|string|max:50',

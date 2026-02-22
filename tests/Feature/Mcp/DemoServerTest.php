@@ -2,7 +2,10 @@
 
 use App\Mcp\Servers\DemoServer;
 use App\Mcp\Tools\GenerateRandomUuidTool;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
+
+uses(RefreshDatabase::class);
 
 test('uuid tool with custom version', function () {
     $uuid = Str::uuid7();

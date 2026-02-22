@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\LogoutPageController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EntryController;
 use App\Http\Controllers\EntryTypeController;
+use App\Http\Controllers\McpLogController;
 use App\Http\Controllers\ResponseController;
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\ProfileController;
@@ -34,6 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('entries.responses', ResponseController::class)->only(['store', 'destroy']);
     Route::resource('entry-types', EntryTypeController::class)->except('show');
     Route::resource('topics', TopicController::class)->except('show');
+    Route::get('mcp-logs', [McpLogController::class, 'index'])->name('mcp-logs.index');
 
     Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         Route::resource('users', UserController::class)->only(['index', 'show']);

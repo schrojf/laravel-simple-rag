@@ -2,6 +2,7 @@
 
 namespace App\Mcp\Prompts;
 
+use App\Actions\LogMcpRequest;
 use Laravel\Mcp\Request;
 use Laravel\Mcp\Response;
 use Laravel\Mcp\Server\Attributes\Description;
@@ -16,8 +17,10 @@ class AnswerQuestionPrompt extends Prompt
      *
      * @return array<int, \Laravel\Mcp\Response>
      */
-    public function handle(Request $request): array
+    public function handle(Request $request, LogMcpRequest $logger): array
     {
+        $logger->log($request, 'prompt', class_basename(static::class));
+
         $validated = $request->validate([
             'query' => 'required|string|max:500',
         ], [

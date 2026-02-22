@@ -25,6 +25,11 @@
                 Topics
             </a>
 
+            <a href="{{ route('mcp-logs.index') }}"
+               class="px-3 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer shrink-0 {{ request()->routeIs('mcp-logs.*') ? 'bg-indigo-50 text-indigo-700' : 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100' }}">
+                MCP Logs
+            </a>
+
             @if(auth()->user()?->isAdmin())
                 <a href="{{ route('admin.users.index') }}"
                    class="px-3 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer shrink-0 {{ request()->routeIs('admin.users.*') ? 'bg-indigo-50 text-indigo-700' : 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100' }}">
