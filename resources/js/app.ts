@@ -1,4 +1,5 @@
 import './bootstrap';
+import { initConfirmModal } from './components/confirm-modal';
 
 const pages = {
     dashboardPage: () => import('./pages/dashboard'),
@@ -18,14 +19,7 @@ function ready() {
         }
     });
 
-    // Confirm dialog for any form with a data-confirm attribute
-    document.addEventListener('submit', (event: Event) => {
-        const form = event.target as HTMLFormElement;
-        const message = form.dataset.confirm;
-        if (message && !window.confirm(message)) {
-            event.preventDefault();
-        }
-    });
+    initConfirmModal();
 
     // User menu dropdown
     const userMenuButton = document.getElementById('userMenuButton') as HTMLButtonElement | null;
