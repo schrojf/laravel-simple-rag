@@ -83,31 +83,33 @@
                 </thead>
                 <tbody class="divide-y divide-zinc-100">
                     @foreach($entries as $entry)
-                        <tr class="hover:bg-zinc-50 transition-colors cursor-pointer"
-                            onclick="window.location.href='{{ route('entries.show', $entry) }}'">
+                        <tr class="relative hover:bg-zinc-50 transition-colors">
                             <td class="px-4 py-3">
-                                <span class="font-medium text-zinc-900">{{ $entry->title }}</span>
+                                <a href="{{ route('entries.show', $entry) }}"
+                                   class="font-medium text-zinc-900 after:absolute after:inset-0">
+                                    {{ $entry->title }}
+                                </a>
                             </td>
-                            <td class="px-4 py-3" onclick="event.stopPropagation()">
+                            <td class="px-4 py-3">
                                 @if($entry->type)
                                     @php
                                         $typeUrl = route('entries.index', array_filter(['type_id' => $entry->type->id, 'search' => request('search'), 'topic_id' => request('topic_id')]));
                                     @endphp
                                     <a href="{{ $typeUrl }}"
-                                       class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium transition-opacity hover:opacity-75"
+                                       class="relative inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium transition-opacity hover:opacity-75"
                                        @if($entry->type->color) style="background-color: {{ $entry->type->color }}20; color: {{ $entry->type->color }}" @else class="bg-indigo-100 text-indigo-700" @endif>
                                         {{ $entry->type->name }}
                                     </a>
                                 @endif
                             </td>
-                            <td class="hidden sm:table-cell px-4 py-3" onclick="event.stopPropagation()">
+                            <td class="hidden sm:table-cell px-4 py-3">
                                 <div class="flex flex-wrap gap-1">
                                     @foreach($entry->topics as $topic)
                                         @php
                                             $topicUrl = route('entries.index', array_filter(['topic_id' => $topic->id, 'search' => request('search'), 'type_id' => request('type_id')]));
                                         @endphp
                                         <a href="{{ $topicUrl }}"
-                                           class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-zinc-100 text-zinc-600 hover:bg-zinc-200 transition-colors">
+                                           class="relative inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-zinc-100 text-zinc-600 hover:bg-zinc-200 transition-colors">
                                             {{ $topic->name }}
                                         </a>
                                     @endforeach
@@ -122,8 +124,8 @@
                             </td>
                             <td class="hidden sm:table-cell px-4 py-3 text-zinc-400 text-xs">~{{ number_format($entry->token_estimate) }}</td>
                             <td class="hidden sm:table-cell px-4 py-3 text-zinc-400">{{ $entry->updated_at->format('Y-m-d') }}</td>
-                            <td class="px-4 py-3" onclick="event.stopPropagation()">
-                                <div class="flex items-center justify-end gap-3">
+                            <td class="px-4 py-3">
+                                <div class="relative inline-flex items-center justify-end gap-3 w-full">
                                     <a href="{{ route('entries.edit', $entry) }}"
                                        class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">
                                         Edit
