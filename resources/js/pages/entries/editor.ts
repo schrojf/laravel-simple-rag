@@ -1,4 +1,5 @@
 import MarkdownIt from 'markdown-it';
+import { initKeyValueEditor } from '../../components/key-value-editor';
 
 const md = new MarkdownIt({ html: false, linkify: true, typographer: true });
 
@@ -34,4 +35,9 @@ export function init(el: HTMLElement): void {
 
     // Run immediately to handle pre-filled content (edit page)
     update();
+
+    // Key-value editor for any meta textarea
+    el.querySelectorAll<HTMLTextAreaElement>('textarea[data-kv-editor]').forEach((metaTextarea) => {
+        initKeyValueEditor(metaTextarea);
+    });
 }

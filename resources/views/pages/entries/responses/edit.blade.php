@@ -54,10 +54,9 @@
             <textarea
                 id="meta"
                 name="meta"
-                rows="3"
-                placeholder='{"model_name": "gpt-4", "source_url": "https://..."}'
+                data-kv-editor
                 class="w-full border @error('meta') border-red-500 @else border-zinc-300 @enderror rounded-lg px-3 py-2 text-sm text-zinc-900 font-mono placeholder-zinc-400 focus:ring-2 focus:ring-indigo-500"
-            >{{ old('meta', $response->meta ? json_encode($response->meta, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) : '') }}</textarea>
+            >{{ old('meta', $response->meta ? json_encode($response->meta, JSON_UNESCAPED_SLASHES) : '') }}</textarea>
             <p class="mt-1.5 text-xs text-zinc-400">Optional JSON object with arbitrary key-value pairs.</p>
             @error('meta')
                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
