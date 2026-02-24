@@ -41,7 +41,8 @@
                 </thead>
                 <tbody class="divide-y divide-zinc-100">
                     @foreach($entryTypes as $entryType)
-                        <tr class="hover:bg-zinc-50 transition-colors">
+                        <tr class="hover:bg-zinc-50 transition-colors cursor-pointer"
+                            onclick="window.location.href='{{ route('entry-types.edit', $entryType) }}'">
                             <td class="px-4 py-3 font-medium text-zinc-900">{{ $entryType->name }}</td>
                             <td class="hidden sm:table-cell px-4 py-3">
                                 @if($entryType->color)
@@ -54,8 +55,17 @@
                                 @endif
                             </td>
                             <td class="px-4 py-3 text-zinc-500">{{ $entryType->icon ?? '—' }}</td>
-                            <td class="hidden sm:table-cell px-4 py-3 text-zinc-500">{{ number_format($entryType->entries_count) }}</td>
-                            <td class="px-4 py-3 text-right">
+                            <td class="hidden sm:table-cell px-4 py-3" onclick="event.stopPropagation()">
+                                @if($entryType->entries_count > 0)
+                                    <a href="{{ route('entries.index', ['type_id' => $entryType->id]) }}"
+                                       class="text-zinc-600 font-medium hover:text-indigo-600 transition-colors">
+                                        {{ number_format($entryType->entries_count) }}
+                                    </a>
+                                @else
+                                    <span class="text-zinc-300">—</span>
+                                @endif
+                            </td>
+                            <td class="px-4 py-3 text-right" onclick="event.stopPropagation()">
                                 <a href="{{ route('entry-types.edit', $entryType) }}"
                                    class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">
                                     Edit

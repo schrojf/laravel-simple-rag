@@ -21,6 +21,7 @@ class EntryController extends Controller
         $entries = Entry::query()
             ->where('user_id', Auth::id())
             ->with(['type', 'topics'])
+            ->withCount('responses')
             ->when($request->filled('type_id'), fn ($q) => $q->where('type_id', $request->integer('type_id')))
             ->when($request->filled('topic_id'), fn ($q) => $q->whereHas('topics', fn ($q) => $q->where('topics.id', $request->integer('topic_id'))))
             ->when($request->filled('search'), fn ($q) => $q->where(fn ($q) => $q->where('title', 'like', '%'.$request->string('search').'%')->orWhere('content', 'like', '%'.$request->string('search').'%')))

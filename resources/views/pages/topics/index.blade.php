@@ -41,7 +41,8 @@
                 </thead>
                 <tbody class="divide-y divide-zinc-100">
                     @foreach($topics as $topic)
-                        <tr class="hover:bg-zinc-50 transition-colors">
+                        <tr class="hover:bg-zinc-50 transition-colors cursor-pointer"
+                            onclick="window.location.href='{{ route('topics.edit', $topic) }}'">
                             <td class="px-4 py-3 font-medium text-zinc-900">{{ $topic->name }}</td>
                             <td class="hidden sm:table-cell px-4 py-3">
                                 @if($topic->color)
@@ -54,8 +55,17 @@
                                 @endif
                             </td>
                             <td class="px-4 py-3 text-zinc-500">{{ $topic->icon ?? '—' }}</td>
-                            <td class="hidden sm:table-cell px-4 py-3 text-zinc-500">{{ number_format($topic->entries_count) }}</td>
-                            <td class="px-4 py-3 text-right">
+                            <td class="hidden sm:table-cell px-4 py-3" onclick="event.stopPropagation()">
+                                @if($topic->entries_count > 0)
+                                    <a href="{{ route('entries.index', ['topic_id' => $topic->id]) }}"
+                                       class="text-zinc-600 font-medium hover:text-indigo-600 transition-colors">
+                                        {{ number_format($topic->entries_count) }}
+                                    </a>
+                                @else
+                                    <span class="text-zinc-300">—</span>
+                                @endif
+                            </td>
+                            <td class="px-4 py-3 text-right" onclick="event.stopPropagation()">
                                 <a href="{{ route('topics.edit', $topic) }}"
                                    class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">
                                     Edit

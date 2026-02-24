@@ -9,15 +9,17 @@
         <h1 class="text-2xl font-semibold text-zinc-900 mt-2">{{ $entry->title }}</h1>
         <div class="flex flex-wrap items-center gap-2 mt-2">
             @if($entry->type)
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
-                      @if($entry->type->color) style="background-color: {{ $entry->type->color }}20; color: {{ $entry->type->color }}" @else class="bg-indigo-100 text-indigo-700" @endif>
+                <a href="{{ route('entries.index', ['type_id' => $entry->type->id]) }}"
+                   class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-opacity hover:opacity-75"
+                   @if($entry->type->color) style="background-color: {{ $entry->type->color }}20; color: {{ $entry->type->color }}" @else class="bg-indigo-100 text-indigo-700" @endif>
                     {{ $entry->type->name }}
-                </span>
+                </a>
             @endif
             @foreach($entry->topics as $topic)
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-zinc-100 text-zinc-600">
+                <a href="{{ route('entries.index', ['topic_id' => $topic->id]) }}"
+                   class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-zinc-100 text-zinc-600 hover:bg-zinc-200 transition-colors">
                     {{ $topic->name }}
-                </span>
+                </a>
             @endforeach
             <span class="text-xs text-zinc-400">~{{ number_format($entry->token_estimate) }} tokens</span>
         </div>
