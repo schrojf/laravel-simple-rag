@@ -52,6 +52,10 @@
     <div class="px-6 py-5 border-b border-zinc-100 flex items-center justify-between">
         <h2 class="text-base font-medium text-zinc-900">Responses ({{ $responses->total() }})</h2>
         <div class="flex items-center gap-3 text-sm">
+            <a href="{{ route('entries.responses.create', $entry) }}"
+               class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-xs py-1.5 px-3 rounded-lg transition-colors">
+                Add Response
+            </a>
             <a href="{{ request()->fullUrlWithQuery(['sort' => 'newest']) }}"
                class="{{ $sort === 'newest' ? 'text-indigo-600 font-medium' : 'text-zinc-500 hover:text-zinc-700 transition-colors' }}">
                 Newest
@@ -70,18 +74,29 @@
             </div>
             <div class="mt-3 flex items-center justify-between">
                 <span class="text-xs text-zinc-400">
-                    {{ $response->user?->name ?? 'AI' }} &middot; {{ $response->created_at->format('Y-m-d H:i') }}
+                    @if(!$response->user_id)
+                        AI &middot;
+                    @elseif($response->user_id !== Auth::id())
+                        {{ $response->user->name }} &middot;
+                    @endif
+                    {{ $response->created_at->format('Y-m-d H:i') }}
                 </span>
-                <form method="POST"
-                      action="{{ route('entries.responses.destroy', [$entry, $response]) }}"
-                      data-confirm="Delete this response?">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit"
-                            class="text-xs text-red-500 hover:text-red-700 transition-colors cursor-pointer">
-                        Delete
-                    </button>
-                </form>
+                <div class="flex items-center gap-3">
+                    <a href="{{ route('entries.responses.edit', [$entry, $response]) }}"
+                       class="text-xs text-indigo-600 hover:text-indigo-700 font-medium transition-colors">
+                        Edit
+                    </a>
+                    <form method="POST"
+                          action="{{ route('entries.responses.destroy', [$entry, $response]) }}"
+                          data-confirm="Delete this response?">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit"
+                                class="text-xs text-red-500 hover:text-red-700 transition-colors cursor-pointer">
+                            Delete
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     @empty

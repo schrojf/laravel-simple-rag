@@ -46,7 +46,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('two-factor.show');
 
     Route::resource('entries', EntryController::class);
-    Route::resource('entries.responses', ResponseController::class)->only(['store', 'destroy']);
+    Route::resource('entries.responses', ResponseController::class)->only(['create', 'store', 'edit', 'update', 'destroy']);
     Route::resource('entry-types', EntryTypeController::class)->except('show');
     Route::resource('topics', TopicController::class)->except('show');
     Route::get('mcp-logs', [McpLogController::class, 'index'])->name('mcp-logs.index');
