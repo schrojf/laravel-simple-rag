@@ -23,7 +23,9 @@ class TopicController extends Controller
 
     public function create(): View
     {
-        return view('pages.topics.create');
+        $constraints = $this->constraints();
+
+        return view('pages.topics.create', compact('constraints'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -47,7 +49,14 @@ class TopicController extends Controller
     {
         abort_unless($topic->user_id === Auth::id(), 403);
 
-        return view('pages.topics.edit', compact('topic'));
+        $constraints = $this->constraints();
+
+        return view('pages.topics.edit', compact('topic', 'constraints'));
+    }
+
+    protected function constraints(): array
+    {
+        return ['name' => 100];
     }
 
     public function update(Request $request, Topic $topic): RedirectResponse

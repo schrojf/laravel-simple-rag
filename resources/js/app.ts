@@ -54,6 +54,31 @@ function ready() {
         });
     }
 
+    // Character counters for inputs/textareas with maxlength
+    function initCharCounters(): void {
+        document.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input[maxlength], textarea[maxlength]').forEach((input) => {
+            const max = input.maxLength;
+            if (max <= 0) return;
+
+            const counter = document.createElement('span');
+            counter.className = 'block text-xs text-zinc-400 mt-1 text-right';
+
+            const update = (): void => {
+                const len = input.value.length;
+                counter.textContent = `${len} / ${max}`;
+                const nearLimit = len > max * 0.9;
+                counter.classList.toggle('text-amber-500', nearLimit);
+                counter.classList.toggle('text-zinc-400', !nearLimit);
+            };
+
+            input.insertAdjacentElement('afterend', counter);
+            input.addEventListener('input', update);
+            update();
+        });
+    }
+
+    initCharCounters();
+
     // Navigation scroll gradients
     const navScrollArea = document.getElementById('navScrollArea') as HTMLElement | null;
     const navFadeLeft = document.getElementById('navFadeLeft') as HTMLElement | null;

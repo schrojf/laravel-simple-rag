@@ -23,7 +23,9 @@ class EntryTypeController extends Controller
 
     public function create(): View
     {
-        return view('pages.entry-types.create');
+        $constraints = $this->constraints();
+
+        return view('pages.entry-types.create', compact('constraints'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -48,8 +50,14 @@ class EntryTypeController extends Controller
         abort_unless($entryType->user_id === Auth::id(), 403);
 
         $entryCount = $entryType->entries()->count();
+        $constraints = $this->constraints();
 
-        return view('pages.entry-types.edit', compact('entryType', 'entryCount'));
+        return view('pages.entry-types.edit', compact('entryType', 'entryCount', 'constraints'));
+    }
+
+    protected function constraints(): array
+    {
+        return ['name' => 100];
     }
 
     public function update(Request $request, EntryType $entryType): RedirectResponse

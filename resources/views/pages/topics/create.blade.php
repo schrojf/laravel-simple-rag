@@ -27,6 +27,7 @@
                     value="{{ old('name') }}"
                     placeholder="e.g. Programming, Personal, TV Shows"
                     autocomplete="off"
+                    maxlength="{{ $constraints['name'] }}"
                     class="w-full border @error('name') border-red-500 @else border-zinc-300 @enderror rounded-lg px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:ring-2 focus:ring-indigo-500"
                 >
                 @error('name')

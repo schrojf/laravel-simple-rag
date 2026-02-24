@@ -58,8 +58,9 @@ class EntryController extends Controller
     {
         $entryTypes = EntryType::query()->where('user_id', Auth::id())->orderBy('name')->get();
         $topics = Topic::query()->where('user_id', Auth::id())->orderBy('name')->get();
+        $constraints = $this->constraints();
 
-        return view('pages.entries.create', compact('entryTypes', 'topics'));
+        return view('pages.entries.create', compact('entryTypes', 'topics', 'constraints'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -92,8 +93,14 @@ class EntryController extends Controller
         $entry->load('topics');
         $entryTypes = EntryType::query()->where('user_id', Auth::id())->orderBy('name')->get();
         $topics = Topic::query()->where('user_id', Auth::id())->orderBy('name')->get();
+        $constraints = $this->constraints();
 
-        return view('pages.entries.edit', compact('entry', 'entryTypes', 'topics'));
+        return view('pages.entries.edit', compact('entry', 'entryTypes', 'topics', 'constraints'));
+    }
+
+    protected function constraints(): array
+    {
+        return ['title' => 500];
     }
 
     public function update(Request $request, Entry $entry): RedirectResponse
