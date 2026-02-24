@@ -7,25 +7,7 @@
         <h1 class="text-2xl font-semibold text-zinc-900">Settings</h1>
     </div>
 
-    <!-- Settings sub-nav -->
-    <div class="flex border-b border-zinc-200 mb-8 gap-4">
-        <a href="{{ route('settings.profile') }}"
-           class="pb-2.5 text-sm font-medium border-b-2 border-transparent -mb-px text-zinc-500 hover:text-zinc-700 transition-colors">
-            Profile
-        </a>
-        <a href="{{ route('settings.password') }}"
-           class="pb-2.5 text-sm font-medium border-b-2 border-transparent -mb-px text-zinc-500 hover:text-zinc-700 transition-colors">
-            Password
-        </a>
-        <a href="{{ route('two-factor.show') }}"
-           class="pb-2.5 text-sm font-medium border-b-2 border-indigo-600 -mb-px text-zinc-900">
-            Two-Factor
-        </a>
-        <a href="{{ route('settings.tokens') }}"
-           class="pb-2.5 text-sm font-medium border-b-2 border-transparent -mb-px text-zinc-500 hover:text-zinc-700 transition-colors">
-            API Tokens
-        </a>
-    </div>
+    @include('pages.settings.navigation')
 
     @if (session('status') === 'recovery-codes-generated')
         <div class="mb-6 bg-green-50 border border-green-200 text-green-800 text-sm rounded-lg px-4 py-3">
