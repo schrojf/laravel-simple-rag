@@ -37,7 +37,7 @@ test('store creates entry type and redirects to index', function () {
     $response = $this->actingAs($this->user)->post(route('entry-types.store'), [
         'name' => 'question',
         'color' => '#6366f1',
-        'icon' => 'question-mark',
+        'icon' => 'document',
     ]);
 
     $response->assertRedirect(route('entry-types.index'));
@@ -45,8 +45,28 @@ test('store creates entry type and redirects to index', function () {
         'user_id' => $this->user->id,
         'name' => 'question',
         'color' => '#6366f1',
-        'icon' => 'question-mark',
+        'icon' => 'document',
     ]);
+});
+
+test('store rejects an unregistered icon name', function () {
+    $this->actingAs($this->user)
+        ->post(route('entry-types.store'), ['name' => 'test', 'icon' => 'not-a-real-icon'])
+        ->assertSessionHasErrors('icon');
+});
+
+test('store accepts null icon', function () {
+    $this->actingAs($this->user)
+        ->post(route('entry-types.store'), ['name' => 'test', 'icon' => null])
+        ->assertRedirect(route('entry-types.index'));
+});
+
+test('update rejects an unregistered icon name', function () {
+    $entryType = EntryType::factory()->for($this->user)->create();
+
+    $this->actingAs($this->user)
+        ->put(route('entry-types.update', $entryType), ['name' => 'test', 'icon' => 'invalid-icon'])
+        ->assertSessionHasErrors('icon');
 });
 
 test('store fails validation when name is missing', function () {

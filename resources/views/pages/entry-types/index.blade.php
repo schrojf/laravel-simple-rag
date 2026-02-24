@@ -58,7 +58,13 @@
                                     <span class="text-zinc-400">—</span>
                                 @endif
                             </td>
-                            <td class="px-4 py-3 text-zinc-500">{{ $entryType->icon ?? '—' }}</td>
+                            <td class="px-4 py-3 text-zinc-400 w-8">
+                                @if($entryType->icon)
+                                    @icon($entryType->icon, ['class' => 'w-4 h-4'])
+                                @else
+                                    <span class="text-zinc-300">—</span>
+                                @endif
+                            </td>
                             <td class="hidden sm:table-cell px-4 py-3">
                                 @if($entryType->entries_count > 0)
                                     <a href="{{ route('entries.index', ['type_id' => $entryType->id]) }}"

@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\EntryType;
+use App\Support\Icons;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class EntryTypeController extends Controller
 {
@@ -24,8 +26,9 @@ class EntryTypeController extends Controller
     public function create(): View
     {
         $constraints = $this->constraints();
+        $icons = Icons::all();
 
-        return view('pages.entry-types.create', compact('constraints'));
+        return view('pages.entry-types.create', compact('constraints', 'icons'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -33,7 +36,7 @@ class EntryTypeController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:100'],
             'color' => ['nullable', 'string', 'max:20'],
-            'icon' => ['nullable', 'string', 'max:50'],
+            'icon' => ['nullable', 'string', Rule::in(array_keys(Icons::options()))],
         ]);
 
         EntryType::create([
@@ -51,8 +54,9 @@ class EntryTypeController extends Controller
 
         $entryCount = $entryType->entries()->count();
         $constraints = $this->constraints();
+        $icons = Icons::all();
 
-        return view('pages.entry-types.edit', compact('entryType', 'entryCount', 'constraints'));
+        return view('pages.entry-types.edit', compact('entryType', 'entryCount', 'constraints', 'icons'));
     }
 
     protected function constraints(): array
@@ -67,7 +71,7 @@ class EntryTypeController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:100'],
             'color' => ['nullable', 'string', 'max:20'],
-            'icon' => ['nullable', 'string', 'max:50'],
+            'icon' => ['nullable', 'string', Rule::in(array_keys(Icons::options()))],
         ]);
 
         $entryType->update($validated);

@@ -36,7 +36,7 @@ test('store creates topic and redirects to index', function () {
     $response = $this->actingAs($this->user)->post(route('topics.store'), [
         'name' => 'Programming',
         'color' => '#6366f1',
-        'icon' => 'code',
+        'icon' => 'code-bracket',
     ]);
 
     $response->assertRedirect(route('topics.index'));
@@ -44,7 +44,28 @@ test('store creates topic and redirects to index', function () {
         'user_id' => $this->user->id,
         'name' => 'Programming',
         'color' => '#6366f1',
+        'icon' => 'code-bracket',
     ]);
+});
+
+test('store rejects an unregistered icon name', function () {
+    $this->actingAs($this->user)
+        ->post(route('topics.store'), ['name' => 'Test', 'icon' => 'not-a-real-icon'])
+        ->assertSessionHasErrors('icon');
+});
+
+test('store accepts null icon', function () {
+    $this->actingAs($this->user)
+        ->post(route('topics.store'), ['name' => 'Test', 'icon' => null])
+        ->assertRedirect(route('topics.index'));
+});
+
+test('update rejects an unregistered icon name', function () {
+    $topic = Topic::factory()->for($this->user)->create();
+
+    $this->actingAs($this->user)
+        ->put(route('topics.update', $topic), ['name' => 'Test', 'icon' => 'invalid-icon'])
+        ->assertSessionHasErrors('icon');
 });
 
 test('store fails validation when name is missing', function () {

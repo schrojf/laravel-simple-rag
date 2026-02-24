@@ -53,17 +53,22 @@
             </div>
 
             <div>
-                <label for="icon" class="block text-sm font-medium text-zinc-700 mb-1.5">Icon</label>
-                <input
-                    type="text"
-                    id="icon"
-                    name="icon"
-                    value="{{ old('icon') }}"
-                    placeholder="e.g. document, code, question-mark"
-                    autocomplete="off"
-                    class="w-full border @error('icon') border-red-500 @else border-zinc-300 @enderror rounded-lg px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:ring-2 focus:ring-indigo-500"
-                >
-                <p class="mt-1.5 text-xs text-zinc-400">Optional icon identifier for UI display.</p>
+                <label class="block text-sm font-medium text-zinc-700 mb-1.5">Icon</label>
+                @php $selectedIcon = old('icon', ''); @endphp
+                <div class="flex flex-wrap gap-2">
+                    <label class="flex flex-col items-center gap-1 px-2 py-2 rounded-lg border cursor-pointer has-[:checked]:border-indigo-500 has-[:checked]:bg-indigo-50 border-zinc-200 hover:border-zinc-300 transition-colors">
+                        <input type="radio" name="icon" value="" class="sr-only" @checked($selectedIcon === '')>
+                        <span class="w-5 h-5 flex items-center justify-center text-zinc-300 text-base leading-none">∅</span>
+                        <span class="text-xs text-zinc-400">none</span>
+                    </label>
+                    @foreach($icons as $name => $data)
+                    <label class="flex flex-col items-center gap-1 px-2 py-2 rounded-lg border cursor-pointer has-[:checked]:border-indigo-500 has-[:checked]:bg-indigo-50 border-zinc-200 hover:border-zinc-300 transition-colors">
+                        <input type="radio" name="icon" value="{{ $name }}" class="sr-only" @checked($selectedIcon === $name)>
+                        @icon($name, ['class' => 'w-5 h-5 text-zinc-600'])
+                        <span class="text-xs text-zinc-500">{{ $name }}</span>
+                    </label>
+                    @endforeach
+                </div>
                 @error('icon')
                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                 @enderror
