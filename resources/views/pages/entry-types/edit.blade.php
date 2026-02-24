@@ -75,7 +75,7 @@
                     <label class="flex flex-col items-center gap-1 px-2 py-2 rounded-lg border cursor-pointer has-[:checked]:border-indigo-500 has-[:checked]:bg-indigo-50 border-zinc-200 hover:border-zinc-300 transition-colors">
                         <input type="radio" name="icon" value="{{ $name }}" class="sr-only" @checked($selectedIcon === $name)>
                         @icon($name, ['class' => 'w-5 h-5 text-zinc-600'])
-                        <span class="text-xs text-zinc-500">{{ $name }}</span>
+                        <span class="text-xs text-zinc-500">{{ Str::headline($name) }}</span>
                     </label>
                     @endforeach
                 </div>
