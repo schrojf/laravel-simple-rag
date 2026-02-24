@@ -9,6 +9,7 @@ A self-hosted, single-user knowledge manager and MCP server. Organise your snipp
 - [Features](#features)
 - [Requirements](#requirements)
 - [Installation](#installation)
+- [Configuration](#configuration)
 - [First-Time Setup](#first-time-setup)
 - [Using the Web UI](#using-the-web-ui)
 - [MCP Server](#mcp-server)
@@ -26,8 +27,10 @@ A self-hosted, single-user knowledge manager and MCP server. Organise your snipp
 
 - **Web Knowledge Manager** — CRUD UI for entries (markdown), entry types, topics, and responses
 - **MCP Server** — exposes all content to LLMs via the Model Context Protocol over OAuth2
-- **Live Markdown editor** — write and preview markdown in the browser
-- **Invitation-based registration** — controlled access via invite codes
+- **Live Markdown editor** — write and preview markdown side-by-side in the browser
+- **Response management** — add and edit responses on separate pages or inline on the entry view
+- **Meta key-value pairs** — attach arbitrary metadata (e.g. `source_url`, `model_name`) to entries and responses via an interactive key-value editor; LLMs can write metadata too
+- **Invitation-based registration** — controlled access via invite codes (optional, see [Configuration](#configuration))
 - **Fully self-hosted** — no external dependencies beyond your own server
 
 ---
@@ -72,52 +75,44 @@ composer run dev
 
 ---
 
+## Configuration
+
+The following custom environment variables control application behaviour. Set them in your `.env` file.
+
+| Variable                   | Default | Description                                                                                                      |
+| -------------------------- | ------- | ---------------------------------------------------------------------------------------------------------------- |
+| `APP_REQUIRE_INVITATION`   | `false` | When `true`, registration requires a valid invitation code. When `false`, anyone can register.                   |
+| `APP_SEED_DEFAULT_CONTENT` | `true`  | When `true`, a set of default entry types and topics is seeded on fresh installs. Set to `false` to start blank. |
+| `APP_SHOW_LANDING_DETAILS` | `false` | When `true`, extra detail (feature list, MCP info) is shown on the public landing page.                          |
+
+---
+
 ## First-Time Setup
 
-Registration is invitation-only. Before you can create your account, generate an invitation code on the server.
+### 1. Register your account
 
-### 1. Generate an invitation code
+If `APP_REQUIRE_INVITATION` is `false` (default), open your app URL and register directly.
 
-```bash
-php artisan invitation:manage create
-```
-
-Options:
-
-```
---description=   Optional label to identify the code (e.g. "my account")
---count=         Number of codes to generate (default: 1)
-```
-
-Example:
+If invitations are required, first generate an invitation code on the server:
 
 ```bash
 php artisan invitation:manage create --description="my account"
 ```
 
-This outputs an invitation code. Keep it — you need it to register.
+Then open your app URL and register using the code.
 
-### 2. List existing codes
+### 2. List or deactivate invitation codes
 
 ```bash
 php artisan invitation:manage list
-```
-
-### 3. Deactivate a code
-
-```bash
 php artisan invitation:manage deactivate --code=YOUR_CODE
 ```
 
-### 4. Register your account
-
-Open your app URL in a browser and register using the invitation code. This is a one-time setup — only one account is expected.
-
-### 5. Set up your entry types
+### 3. Set up your entry types
 
 After logging in, go to **Entry Types** and create the types you want to use (e.g. `question`, `snippet`, `document`, `context`). Entry types are how you and the LLM categorize knowledge.
 
-### 6. (Optional) Create topics
+### 4. (Optional) Create topics
 
 Go to **Topics** and create topic tags (e.g. `Programming`, `Personal`, `Work`) to organise entries across types.
 
@@ -125,16 +120,20 @@ Go to **Topics** and create topic tags (e.g. `Programming`, `Personal`, `Work`) 
 
 ## Using the Web UI
 
-| Page        | URL                  | Description                              |
-| ----------- | -------------------- | ---------------------------------------- |
-| Dashboard   | `/dashboard`         | Overview of your knowledge base          |
-| Entries     | `/entries`           | Browse, filter, and search all entries   |
-| New Entry   | `/entries/create`    | Create an entry with the Markdown editor |
-| Edit Entry  | `/entries/{id}/edit` | Edit content and manage responses        |
-| Entry Types | `/entry-types`       | Manage your entry type labels            |
-| Topics      | `/topics`            | Manage your topic tags                   |
+| Page          | URL                                  | Description                              |
+| ------------- | ------------------------------------ | ---------------------------------------- |
+| Dashboard     | `/dashboard`                         | Overview of your knowledge base          |
+| Entries       | `/entries`                           | Browse, filter, and search all entries   |
+| New Entry     | `/entries/create`                    | Create an entry with the Markdown editor |
+| Edit Entry    | `/entries/{id}/edit`                 | Edit content, meta, and manage responses |
+| New Response  | `/entries/{id}/responses/create`     | Add a response with the Markdown editor  |
+| Edit Response | `/entries/{id}/responses/{rid}/edit` | Edit a response's content and meta       |
+| Entry Types   | `/entry-types`                       | Manage your entry type labels            |
+| Topics        | `/topics`                            | Manage your topic tags                   |
 
 **Entries** are the core unit — a title, Markdown content, a type, and optional topics. **Responses** are attached to entries and represent answers or generated content (written by you or by an LLM via MCP).
+
+Both entries and responses support optional **meta** key-value pairs — arbitrary data attached to the record (e.g. `source_url`, `model_name`, `confidence`). The UI provides an interactive key-value editor; LLMs can supply meta via the MCP tools.
 
 ---
 
@@ -178,17 +177,17 @@ Replace `https://your-app-url.com` with your actual app URL. On first connection
 
 All tools are scoped to your authenticated account.
 
-| Tool              | Description                                                                                             |
-| ----------------- | ------------------------------------------------------------------------------------------------------- |
-| `search_entries`  | Search entries by keyword, entry type ID, and/or topic ID. Returns previews with metadata.              |
-| `get_entry`       | Fetch a single entry by ID. Pass `with_responses: true` to include all attached responses.              |
-| `get_responses`   | List all responses stored for a given entry ID.                                                         |
-| `list_types`      | List all your entry types with their IDs. Call this before creating entries.                            |
-| `list_topics`     | List all your topics with their IDs. Call this before tagging entries.                                  |
-| `create_entry`    | Create a new entry. Requires `title`, `content` (Markdown), and `type_id`. Optionally pass `topic_ids`. |
-| `create_response` | Store a response linked to an entry. Requires `entry_id` and `content`. Defaults to `text/markdown`.    |
-| `create_topic`    | Create a new topic tag. Requires `name`. Optional `color` and `icon`.                                   |
-| `add_topic`       | Attach an existing topic to an existing entry. Requires `entry_id` and `topic_id`.                      |
+| Tool              | Description                                                                                                                           |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `search_entries`  | Search entries by keyword, entry type ID, and/or topic ID. Returns previews with metadata.                                            |
+| `get_entry`       | Fetch a single entry by ID. Pass `with_responses: true` to include all attached responses.                                            |
+| `get_responses`   | List all responses stored for a given entry ID.                                                                                       |
+| `list_types`      | List all your entry types with their IDs. Call this before creating entries.                                                          |
+| `list_topics`     | List all your topics with their IDs. Call this before tagging entries.                                                                |
+| `create_entry`    | Create a new entry. Requires `title`, `content` (Markdown), and `type_id`. Optionally pass `topic_ids` and `meta` (key-value object). |
+| `create_response` | Store a response linked to an entry. Requires `entry_id` and `content`. Optionally pass `meta` (key-value object).                    |
+| `create_topic`    | Create a new topic tag. Requires `name`. Optional `color` and `icon`.                                                                 |
+| `add_topic`       | Attach an existing topic to an existing entry. Requires `entry_id` and `topic_id`.                                                    |
 
 ### Available Prompts
 
@@ -274,7 +273,17 @@ vendor/bin/pint
 vendor/bin/phpstan analyse
 ```
 
-### Invitation management reference
+### User management
+
+```bash
+php artisan user:manage list
+php artisan user:manage promote --email=user@example.com
+php artisan user:manage demote  --email=user@example.com
+```
+
+Run `php artisan user:manage --help` for full usage.
+
+### Invitation management
 
 ```bash
 php artisan invitation:manage create [--description=] [--count=]
