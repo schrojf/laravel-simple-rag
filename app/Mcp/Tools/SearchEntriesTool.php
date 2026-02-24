@@ -36,11 +36,7 @@ class SearchEntriesTool extends Tool
             ->with(['type', 'topics']);
 
         if (! empty($validated['keyword'])) {
-            $keyword = $validated['keyword'];
-            $query->where(function ($q) use ($keyword) {
-                $q->where('title', 'like', "%{$keyword}%")
-                    ->orWhere('content', 'like', "%{$keyword}%");
-            });
+            $query->whereFullTextOrLike(['title', 'content'], $validated['keyword']);
         }
 
         if (! empty($validated['type_id'])) {

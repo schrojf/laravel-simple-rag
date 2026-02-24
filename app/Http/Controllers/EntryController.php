@@ -24,7 +24,7 @@ class EntryController extends Controller
             ->withCount('responses')
             ->when($request->filled('type_id'), fn ($q) => $q->where('type_id', $request->integer('type_id')))
             ->when($request->filled('topic_id'), fn ($q) => $q->whereHas('topics', fn ($q) => $q->where('topics.id', $request->integer('topic_id'))))
-            ->when($request->filled('search'), fn ($q) => $q->where(fn ($q) => $q->where('title', 'like', '%'.$request->string('search').'%')->orWhere('content', 'like', '%'.$request->string('search').'%')))
+            ->when($request->filled('search'), fn ($q) => $q->whereFullTextOrLike(['title', 'content'], (string) $request->string('search')))
             ->latest()
             ->paginate(20)
             ->withQueryString();

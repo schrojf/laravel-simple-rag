@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\SupportsFullTextSearch;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Entry extends Model
 {
     /** @use HasFactory<\Database\Factories\EntryFactory> */
-    use HasFactory;
+    use HasFactory, SupportsFullTextSearch;
 
     protected $fillable = ['user_id', 'type_id', 'title', 'content', 'meta'];
 
