@@ -21,11 +21,11 @@ class SeedDefaultUserContent
     private function seedEntryTypes(User $user): array
     {
         $definitions = [
-            ['name' => 'Note',      'color' => '#6366f1'],
-            ['name' => 'Article',   'color' => '#0ea5e9'],
-            ['name' => 'Reference', 'color' => '#10b981'],
-            ['name' => 'Snippet',   'color' => '#f59e0b'],
-            ['name' => 'Question',  'color' => '#ec4899'],
+            ['name' => 'Note',      'color' => '#6366f1', 'icon' => 'pencil'],
+            ['name' => 'Article',   'color' => '#0ea5e9', 'icon' => 'document-text'],
+            ['name' => 'Reference', 'color' => '#10b981', 'icon' => 'bookmark'],
+            ['name' => 'Snippet',   'color' => '#f59e0b', 'icon' => 'code-bracket'],
+            ['name' => 'Question',  'color' => '#ec4899', 'icon' => 'information-circle'],
         ];
 
         $types = [];
@@ -35,6 +35,7 @@ class SeedDefaultUserContent
                 'user_id' => $user->id,
                 'name' => $definition['name'],
                 'color' => $definition['color'],
+                'icon' => $definition['icon'],
             ]);
         }
 
@@ -45,12 +46,12 @@ class SeedDefaultUserContent
     private function seedTopics(User $user): array
     {
         $definitions = [
-            ['name' => 'General'],
-            ['name' => 'Programming'],
-            ['name' => 'AI & Machine Learning'],
-            ['name' => 'Productivity'],
-            ['name' => 'Laravel'],
-            ['name' => 'DevOps'],
+            ['name' => 'General',              'icon' => 'tag'],
+            ['name' => 'Programming',          'icon' => 'code-bracket'],
+            ['name' => 'AI & Machine Learning', 'icon' => 'star'],
+            ['name' => 'Productivity',         'icon' => 'check-circle'],
+            ['name' => 'Laravel',              'icon' => 'document'],
+            ['name' => 'DevOps',               'icon' => 'folder'],
         ];
 
         $topics = [];
@@ -59,6 +60,7 @@ class SeedDefaultUserContent
             $topics[$definition['name']] = Topic::create([
                 'user_id' => $user->id,
                 'name' => $definition['name'],
+                'icon' => $definition['icon'],
             ]);
         }
 

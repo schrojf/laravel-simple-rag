@@ -10,14 +10,16 @@
         <div class="flex flex-wrap items-center gap-2 mt-2">
             @if($entry->type)
                 <a href="{{ route('entries.index', ['type_id' => $entry->type->id]) }}"
-                   class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-opacity hover:opacity-75"
+                   class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium transition-opacity hover:opacity-75"
                    @if($entry->type->color) style="background-color: {{ $entry->type->color }}20; color: {{ $entry->type->color }}" @else class="bg-indigo-100 text-indigo-700" @endif>
+                    @if($entry->type->icon) @icon($entry->type->icon, ['class' => 'w-3 h-3 shrink-0']) @endif
                     {{ $entry->type->name }}
                 </a>
             @endif
             @foreach($entry->topics as $topic)
                 <a href="{{ route('entries.index', ['topic_id' => $topic->id]) }}"
-                   class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-zinc-100 text-zinc-600 hover:bg-zinc-200 transition-colors">
+                   class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-zinc-100 text-zinc-600 hover:bg-zinc-200 transition-colors">
+                    @if($topic->icon) @icon($topic->icon, ['class' => 'w-3 h-3 shrink-0']) @endif
                     {{ $topic->name }}
                 </a>
             @endforeach

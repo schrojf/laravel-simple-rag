@@ -96,8 +96,9 @@
                                         $typeUrl = route('entries.index', array_filter(['type_id' => $entry->type->id, 'search' => request('search'), 'topic_id' => request('topic_id')]));
                                     @endphp
                                     <a href="{{ $typeUrl }}"
-                                       class="relative inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium transition-opacity hover:opacity-75"
+                                       class="relative inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium transition-opacity hover:opacity-75"
                                        @if($entry->type->color) style="background-color: {{ $entry->type->color }}20; color: {{ $entry->type->color }}" @else class="bg-indigo-100 text-indigo-700" @endif>
+                                        @if($entry->type->icon) @icon($entry->type->icon, ['class' => 'w-3 h-3 shrink-0']) @endif
                                         {{ $entry->type->name }}
                                     </a>
                                 @endif
@@ -109,7 +110,8 @@
                                             $topicUrl = route('entries.index', array_filter(['topic_id' => $topic->id, 'search' => request('search'), 'type_id' => request('type_id')]));
                                         @endphp
                                         <a href="{{ $topicUrl }}"
-                                           class="relative inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-zinc-100 text-zinc-600 hover:bg-zinc-200 transition-colors">
+                                           class="relative inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-zinc-100 text-zinc-600 hover:bg-zinc-200 transition-colors">
+                                            @if($topic->icon) @icon($topic->icon, ['class' => 'w-3 h-3 shrink-0']) @endif
                                             {{ $topic->name }}
                                         </a>
                                     @endforeach
