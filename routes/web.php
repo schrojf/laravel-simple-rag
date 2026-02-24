@@ -10,6 +10,7 @@ use App\Http\Controllers\McpLogController;
 use App\Http\Controllers\ResponseController;
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\ProfileController;
+use App\Http\Controllers\Settings\TokenController;
 use App\Http\Controllers\Settings\TwoFactorController;
 use App\Http\Controllers\TopicController;
 use Illuminate\Support\Facades\Route;
@@ -33,6 +34,10 @@ Route::middleware(['auth'])->group(function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
+
+    Route::get('settings/tokens', [TokenController::class, 'show'])->name('settings.tokens');
+    Route::post('settings/tokens', [TokenController::class, 'store'])->name('settings.tokens.store');
+    Route::delete('settings/tokens/{token}', [TokenController::class, 'destroy'])->name('settings.tokens.destroy');
 
     Route::get('settings/two-factor', [TwoFactorController::class, 'show'])
         ->middleware(

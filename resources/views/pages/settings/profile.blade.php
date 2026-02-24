@@ -20,6 +20,10 @@
        class="pb-2.5 text-sm font-medium border-b-2 border-transparent -mb-px text-zinc-500 hover:text-zinc-700 transition-colors">
         Two-Factor
     </a>
+    <a href="{{ route('settings.tokens') }}"
+       class="pb-2.5 text-sm font-medium border-b-2 border-transparent -mb-px text-zinc-500 hover:text-zinc-700 transition-colors">
+        API Tokens
+    </a>
 </div>
 
 @if ($hasUnverifiedEmail)
