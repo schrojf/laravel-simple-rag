@@ -80,12 +80,13 @@
                     <li class="px-5 py-3 flex items-center justify-between gap-3 hover:bg-zinc-50 transition-colors">
                         <div class="flex items-center gap-2 min-w-0">
                             @if($entry->type)
-                                <span class="shrink-0 inline-flex items-center rounded px-1.5 py-0.5 text-xs font-medium"
+                                <span class="shrink-0 inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-xs font-medium"
                                       @if($entry->type->color)
                                           style="background-color: {{ $entry->type->color }}20; color: {{ $entry->type->color }}"
                                       @else
                                           style="background-color: #e4e4e7; color: #52525b"
                                       @endif>
+                                    @if($entry->type->icon) @icon($entry->type->icon, ['class' => 'w-3 h-3 shrink-0']) @endif
                                     {{ $entry->type->name }}
                                 </span>
                             @endif
