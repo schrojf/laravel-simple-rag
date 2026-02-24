@@ -12,6 +12,11 @@ beforeEach(function () {
     $this->other = User::factory()->create();
 });
 
+function withConfirmedPasswordToken(): array
+{
+    return ['auth.password_confirmed_at' => time()];
+}
+
 test('guest is redirected to login', function () {
     $this->get(route('settings.tokens'))->assertRedirect(route('login'));
 });
@@ -42,6 +47,7 @@ test('store creates token and redirects with new_token in session', function () 
     Client::factory()->asPersonalAccessTokenClient()->create();
 
     $response = $this->actingAs($this->user)
+        ->withSession(withConfirmedPasswordToken())
         ->post(route('settings.tokens.store'), ['name' => 'My Test Token']);
 
     $response->assertRedirect(route('settings.tokens'));
@@ -50,12 +56,14 @@ test('store creates token and redirects with new_token in session', function () 
 
 test('store validates name is required', function () {
     $this->actingAs($this->user)
+        ->withSession(withConfirmedPasswordToken())
         ->post(route('settings.tokens.store'), ['name' => ''])
         ->assertSessionHasErrors('name');
 });
 
 test('store validates name max length', function () {
     $this->actingAs($this->user)
+        ->withSession(withConfirmedPasswordToken())
         ->post(route('settings.tokens.store'), ['name' => str_repeat('a', 101)])
         ->assertSessionHasErrors('name');
 });
@@ -66,6 +74,7 @@ test('destroy revokes token and redirects', function () {
     $tokenResult = $this->user->createToken('My Token');
 
     $response = $this->actingAs($this->user)
+        ->withSession(withConfirmedPasswordToken())
         ->delete(route('settings.tokens.destroy', $tokenResult->token->id));
 
     $response->assertRedirect(route('settings.tokens'));
@@ -80,6 +89,7 @@ test('destroy returns 404 for token owned by another user', function () {
     $otherToken = $this->other->createToken('Other Token');
 
     $this->actingAs($this->user)
+        ->withSession(withConfirmedPasswordToken())
         ->delete(route('settings.tokens.destroy', $otherToken->token->id))
         ->assertNotFound();
 });

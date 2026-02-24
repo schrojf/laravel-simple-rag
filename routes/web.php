@@ -36,8 +36,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
 
     Route::get('settings/tokens', [TokenController::class, 'show'])->name('settings.tokens');
-    Route::post('settings/tokens', [TokenController::class, 'store'])->name('settings.tokens.store');
-    Route::delete('settings/tokens/{token}', [TokenController::class, 'destroy'])->name('settings.tokens.destroy');
+    Route::post('settings/tokens', [TokenController::class, 'store'])->name('settings.tokens.store')->middleware(['password.confirm']);
+    Route::delete('settings/tokens/{token}', [TokenController::class, 'destroy'])->name('settings.tokens.destroy')->middleware(['password.confirm']);
 
     Route::get('settings/two-factor', [TwoFactorController::class, 'show'])
         ->middleware(
