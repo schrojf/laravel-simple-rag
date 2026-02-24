@@ -25,6 +25,7 @@ class CreateResponseTool extends Tool
             'entry_id' => 'required|integer',
             'content' => 'required|string',
             'mime_type' => 'nullable|string|max:100',
+            'meta' => 'nullable|array',
         ], [
             'entry_id.required' => 'You must provide the entry_id to attach this response to.',
             'content.required' => 'You must provide the response content.',
@@ -43,6 +44,7 @@ class CreateResponseTool extends Tool
             'user_id' => $user->id,
             'content' => $validated['content'],
             'mime_type' => $validated['mime_type'] ?? 'text/markdown',
+            'meta' => $validated['meta'] ?? null,
         ]);
 
         return Response::text(json_encode([
@@ -69,6 +71,9 @@ class CreateResponseTool extends Tool
                 ->required(),
             'mime_type' => $schema->string()
                 ->description('The MIME type of the content (default: text/markdown).')
+                ->nullable(),
+            'meta' => $schema->object()
+                ->description('Optional arbitrary key-value pairs (e.g. model_name, source_url).')
                 ->nullable(),
         ];
     }

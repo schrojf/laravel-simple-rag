@@ -48,6 +48,22 @@
     </div>
 </div>
 
+@if($entry->meta)
+<div class="mt-6 bg-white rounded-xl border border-zinc-200 shadow-sm">
+    <div class="px-6 py-5 border-b border-zinc-100">
+        <h2 class="text-base font-medium text-zinc-900">Meta</h2>
+    </div>
+    <dl class="px-6 py-2 divide-y divide-zinc-100">
+        @foreach($entry->meta as $key => $value)
+        <div class="py-2.5 flex gap-4 text-sm">
+            <dt class="w-40 shrink-0 font-medium text-zinc-500">{{ $key }}</dt>
+            <dd class="text-zinc-800 font-mono break-all">{{ is_array($value) ? json_encode($value) : $value }}</dd>
+        </div>
+        @endforeach
+    </dl>
+</div>
+@endif
+
 <div class="mt-6 bg-white rounded-xl border border-zinc-200 shadow-sm">
     <div class="px-6 py-5 border-b border-zinc-100 flex items-center justify-between">
         <h2 class="text-base font-medium text-zinc-900">Responses ({{ $responses->total() }})</h2>
@@ -72,6 +88,16 @@
             <div class="prose prose-zinc prose-sm max-w-none">
                 {!! $response->rendered_content !!}
             </div>
+            @if($response->meta)
+            <dl class="mt-2 flex flex-wrap gap-x-4 gap-y-1">
+                @foreach($response->meta as $key => $value)
+                <div class="flex items-center gap-1 text-xs text-zinc-400">
+                    <dt class="font-medium">{{ $key }}:</dt>
+                    <dd class="font-mono">{{ is_array($value) ? json_encode($value) : $value }}</dd>
+                </div>
+                @endforeach
+            </dl>
+            @endif
             <div class="mt-3 flex items-center justify-between">
                 <span class="text-xs text-zinc-400">
                     @if(!$response->user_id)

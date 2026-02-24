@@ -45,6 +45,26 @@
         @enderror
     </div>
 
+    <div class="bg-white rounded-xl border border-zinc-200 shadow-sm">
+        <div class="px-6 py-5 border-b border-zinc-100">
+            <h2 class="text-base font-medium text-zinc-900">Meta</h2>
+        </div>
+        <div class="px-6 py-5">
+            <label for="meta" class="block text-sm font-medium text-zinc-700 mb-1.5">Meta</label>
+            <textarea
+                id="meta"
+                name="meta"
+                rows="3"
+                placeholder='{"model_name": "gpt-4", "source_url": "https://..."}'
+                class="w-full border @error('meta') border-red-500 @else border-zinc-300 @enderror rounded-lg px-3 py-2 text-sm text-zinc-900 font-mono placeholder-zinc-400 focus:ring-2 focus:ring-indigo-500"
+            >{{ old('meta', $response->meta ? json_encode($response->meta, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) : '') }}</textarea>
+            <p class="mt-1.5 text-xs text-zinc-400">Optional JSON object with arbitrary key-value pairs.</p>
+            @error('meta')
+                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+            @enderror
+        </div>
+    </div>
+
     <div class="flex items-center gap-3">
         <button type="submit"
                 class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm py-2 px-4 rounded-lg transition-colors cursor-pointer">

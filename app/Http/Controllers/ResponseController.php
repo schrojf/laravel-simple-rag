@@ -24,11 +24,13 @@ class ResponseController extends Controller
 
         $validated = $request->validate([
             'content' => ['required', 'string'],
+            'meta' => ['nullable', 'json'],
         ]);
 
         $entry->responses()->create([
             'user_id' => Auth::id(),
             'content' => $validated['content'],
+            'meta' => isset($validated['meta']) ? json_decode($validated['meta'], true) : null,
         ]);
 
         return redirect()->route('entries.show', $entry)
@@ -50,9 +52,13 @@ class ResponseController extends Controller
 
         $validated = $request->validate([
             'content' => ['required', 'string'],
+            'meta' => ['nullable', 'json'],
         ]);
 
-        $response->update($validated);
+        $response->update([
+            'content' => $validated['content'],
+            'meta' => isset($validated['meta']) ? json_decode($validated['meta'], true) : null,
+        ]);
 
         return redirect()->route('entries.show', $entry)
             ->with('success', 'Response updated.');

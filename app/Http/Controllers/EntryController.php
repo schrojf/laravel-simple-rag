@@ -71,6 +71,7 @@ class EntryController extends Controller
             'type_id' => ['required', 'integer', 'exists:entry_types,id'],
             'topics' => ['nullable', 'array'],
             'topics.*' => ['integer', 'exists:topics,id'],
+            'meta' => ['nullable', 'json'],
         ]);
 
         $entry = Entry::create([
@@ -78,6 +79,7 @@ class EntryController extends Controller
             'type_id' => $validated['type_id'],
             'title' => $validated['title'],
             'content' => $validated['content'],
+            'meta' => isset($validated['meta']) ? json_decode($validated['meta'], true) : null,
         ]);
 
         $entry->topics()->sync($validated['topics'] ?? []);
@@ -113,12 +115,14 @@ class EntryController extends Controller
             'type_id' => ['required', 'integer', 'exists:entry_types,id'],
             'topics' => ['nullable', 'array'],
             'topics.*' => ['integer', 'exists:topics,id'],
+            'meta' => ['nullable', 'json'],
         ]);
 
         $entry->update([
             'type_id' => $validated['type_id'],
             'title' => $validated['title'],
             'content' => $validated['content'],
+            'meta' => isset($validated['meta']) ? json_decode($validated['meta'], true) : null,
         ]);
 
         $entry->topics()->sync($validated['topics'] ?? []);

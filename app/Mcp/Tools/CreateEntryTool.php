@@ -28,6 +28,7 @@ class CreateEntryTool extends Tool
             'type_id' => 'required|integer',
             'topic_ids' => 'nullable|array',
             'topic_ids.*' => 'integer',
+            'meta' => 'nullable|array',
         ], [
             'title.required' => 'You must provide a title for the entry.',
             'content.required' => 'You must provide markdown content for the entry.',
@@ -49,6 +50,7 @@ class CreateEntryTool extends Tool
             'type_id' => $validated['type_id'],
             'title' => $validated['title'],
             'content' => $validated['content'],
+            'meta' => $validated['meta'] ?? null,
         ]);
 
         if (! empty($validated['topic_ids'])) {
@@ -86,6 +88,9 @@ class CreateEntryTool extends Tool
                 ->required(),
             'topic_ids' => $schema->array()
                 ->description('Optional list of topic IDs to attach to the entry.')
+                ->nullable(),
+            'meta' => $schema->object()
+                ->description('Optional arbitrary key-value pairs (e.g. source_url, model_name).')
                 ->nullable(),
         ];
     }
