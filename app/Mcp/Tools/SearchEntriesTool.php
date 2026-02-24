@@ -24,6 +24,7 @@ class SearchEntriesTool extends Tool
             'keyword' => 'nullable|string|max:255',
             'type_id' => 'nullable|integer',
             'topic_id' => 'nullable|integer',
+            'without_responses' => 'nullable|boolean',
             'limit' => 'nullable|integer|min:1|max:100',
         ]);
 
@@ -31,6 +32,7 @@ class SearchEntriesTool extends Tool
 
         $query = Entry::query()
             ->where('user_id', $user->id)
+            ->withCount('responses')
             ->with(['type', 'topics']);
 
         if (! empty($validated['keyword'])) {
@@ -49,6 +51,10 @@ class SearchEntriesTool extends Tool
             $query->whereHas('topics', fn ($q) => $q->where('topics.id', $validated['topic_id']));
         }
 
+        if (! empty($validated['without_responses'])) {
+            $query->doesntHave('responses');
+        }
+
         $limit = $validated['limit'] ?? 20;
         $entries = $query->latest()->limit($limit)->get();
 
@@ -59,6 +65,7 @@ class SearchEntriesTool extends Tool
             'topics' => $entry->topics->pluck('name'),
             'content_preview' => str($entry->content)->limit(200)->toString(),
             'token_estimate' => $entry->token_estimate,
+            'responses_count' => $entry->responses_count,
             'created_at' => $entry->created_at?->toDateTimeString(),
         ]);
 
@@ -81,6 +88,9 @@ class SearchEntriesTool extends Tool
                 ->nullable(),
             'topic_id' => $schema->integer()
                 ->description('Filter entries by topic ID.')
+                ->nullable(),
+            'without_responses' => $schema->boolean()
+                ->description('When true, return only entries that have no responses yet.')
                 ->nullable(),
             'limit' => $schema->integer()
                 ->description('Maximum number of results to return (1–100, default 20).')

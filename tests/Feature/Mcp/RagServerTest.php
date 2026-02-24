@@ -68,6 +68,26 @@ test('search_entries filters by keyword', function () {
         ->assertDontSee('PHP Basics');
 });
 
+test('search_entries includes responses_count in results', function () {
+    $entry = Entry::factory()->for($this->user)->for($this->entryType, 'type')->create(['title' => 'Has Responses']);
+    ResponseModel::factory()->for($entry)->for($this->user)->createMany(3);
+
+    RagServer::actingAs($this->user)->tool(SearchEntriesTool::class, [])
+        ->assertOk()
+        ->assertSee('"responses_count": 3');
+});
+
+test('search_entries filters entries without responses when without_responses is true', function () {
+    $withResponse = Entry::factory()->for($this->user)->for($this->entryType, 'type')->create(['title' => 'Has Response']);
+    Entry::factory()->for($this->user)->for($this->entryType, 'type')->create(['title' => 'No Response']);
+    ResponseModel::factory()->for($withResponse)->for($this->user)->create();
+
+    RagServer::actingAs($this->user)->tool(SearchEntriesTool::class, ['without_responses' => true])
+        ->assertOk()
+        ->assertSee('No Response')
+        ->assertDontSee('Has Response');
+});
+
 test('search_entries filters by type_id', function () {
     $typeB = EntryType::factory()->for($this->user)->create();
     Entry::factory()->for($this->user)->for($this->entryType, 'type')->create(['title' => 'Type A Entry']);
