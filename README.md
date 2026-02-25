@@ -2,6 +2,8 @@
 
 A self-hosted, single-user knowledge manager and MCP server. Organise your snippets, questions, documents, and context in a web UI, then expose everything to AI assistants (Claude, etc.) via the Model Context Protocol. LLMs can read your knowledge base and write answers, scraped content, and summaries back into it.
 
+![Dashboard](./resources/docs/screenshots/dashboard.png)
+
 ---
 
 ## Table of Contents
@@ -30,8 +32,31 @@ A self-hosted, single-user knowledge manager and MCP server. Organise your snipp
 - **Live Markdown editor** — write and preview markdown side-by-side in the browser
 - **Response management** — add and edit responses on separate pages or inline on the entry view
 - **Meta key-value pairs** — attach arbitrary metadata (e.g. `source_url`, `model_name`) to entries and responses via an interactive key-value editor; LLMs can write metadata too
+- **Icons for entry types and topics** — assign one of 25 curated SVG icons to categorise your knowledge visually; icons appear in tables, entry badges, and the dashboard
+- **Personal access tokens** — create and manage long-lived API tokens in **Settings → API Tokens** for scripted or direct API access
+- **Full-text search** — entry search uses native full-text indexes on MySQL/MariaDB/PostgreSQL, with automatic LIKE fallback on SQLite
 - **Invitation-based registration** — controlled access via invite codes (optional, see [Configuration](#configuration))
 - **Fully self-hosted** — no external dependencies beyond your own server
+
+---
+
+## Screenshots
+
+<details>
+
+<summary>Show all screenshots</summary>
+
+![entries.png](resources/docs/screenshots/entries.png)
+![claude_1.png](resources/docs/screenshots/claude_1.png)
+![entry.png](resources/docs/screenshots/entry.png)
+![response.png](resources/docs/screenshots/response.png)
+![types.png](resources/docs/screenshots/types.png)
+![new.png](resources/docs/screenshots/new.png)
+![claude_2.png](resources/docs/screenshots/claude_2.png)
+![mcp_logs.png](resources/docs/screenshots/mcp_logs.png)
+![settings.png](resources/docs/screenshots/settings.png)
+
+</details>
 
 ---
 
@@ -108,11 +133,19 @@ php artisan invitation:manage list
 php artisan invitation:manage deactivate --code=YOUR_CODE
 ```
 
-### 3. Set up your entry types
+### 3. (Optional) Enable personal access tokens
+
+If you want to use **Settings → API Tokens** to create long-lived tokens for scripted API access, create the Passport personal access client once:
+
+```bash
+php artisan passport:client --personal --no-interaction
+```
+
+### 4. Set up your entry types
 
 After logging in, go to **Entry Types** and create the types you want to use (e.g. `question`, `snippet`, `document`, `context`). Entry types are how you and the LLM categorize knowledge.
 
-### 4. (Optional) Create topics
+### 5. (Optional) Create topics
 
 Go to **Topics** and create topic tags (e.g. `Programming`, `Personal`, `Work`) to organise entries across types.
 
@@ -120,16 +153,17 @@ Go to **Topics** and create topic tags (e.g. `Programming`, `Personal`, `Work`) 
 
 ## Using the Web UI
 
-| Page          | URL                                  | Description                              |
-| ------------- | ------------------------------------ | ---------------------------------------- |
-| Dashboard     | `/dashboard`                         | Overview of your knowledge base          |
-| Entries       | `/entries`                           | Browse, filter, and search all entries   |
-| New Entry     | `/entries/create`                    | Create an entry with the Markdown editor |
-| Edit Entry    | `/entries/{id}/edit`                 | Edit content, meta, and manage responses |
-| New Response  | `/entries/{id}/responses/create`     | Add a response with the Markdown editor  |
-| Edit Response | `/entries/{id}/responses/{rid}/edit` | Edit a response's content and meta       |
-| Entry Types   | `/entry-types`                       | Manage your entry type labels            |
-| Topics        | `/topics`                            | Manage your topic tags                   |
+| Page          | URL                                  | Description                               |
+| ------------- | ------------------------------------ | ----------------------------------------- |
+| Dashboard     | `/dashboard`                         | Overview of your knowledge base           |
+| Entries       | `/entries`                           | Browse, filter, and search all entries    |
+| New Entry     | `/entries/create`                    | Create an entry with the Markdown editor  |
+| Edit Entry    | `/entries/{id}/edit`                 | Edit content, meta, and manage responses  |
+| New Response  | `/entries/{id}/responses/create`     | Add a response with the Markdown editor   |
+| Edit Response | `/entries/{id}/responses/{rid}/edit` | Edit a response's content and meta        |
+| Entry Types   | `/entry-types`                       | Manage your entry type labels and icons   |
+| Topics        | `/topics`                            | Manage your topic tags and icons          |
+| Settings      | `/settings/profile`                  | Profile, password, two-factor, API tokens |
 
 **Entries** are the core unit — a title, Markdown content, a type, and optional topics. **Responses** are attached to entries and represent answers or generated content (written by you or by an LLM via MCP).
 
@@ -177,17 +211,17 @@ Replace `https://your-app-url.com` with your actual app URL. On first connection
 
 All tools are scoped to your authenticated account.
 
-| Tool              | Description                                                                                                                           |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| `search_entries`  | Search entries by keyword, entry type ID, and/or topic ID. Returns previews with metadata.                                            |
-| `get_entry`       | Fetch a single entry by ID. Pass `with_responses: true` to include all attached responses.                                            |
-| `get_responses`   | List all responses stored for a given entry ID.                                                                                       |
-| `list_types`      | List all your entry types with their IDs. Call this before creating entries.                                                          |
-| `list_topics`     | List all your topics with their IDs. Call this before tagging entries.                                                                |
-| `create_entry`    | Create a new entry. Requires `title`, `content` (Markdown), and `type_id`. Optionally pass `topic_ids` and `meta` (key-value object). |
-| `create_response` | Store a response linked to an entry. Requires `entry_id` and `content`. Optionally pass `meta` (key-value object).                    |
-| `create_topic`    | Create a new topic tag. Requires `name`. Optional `color` and `icon`.                                                                 |
-| `add_topic`       | Attach an existing topic to an existing entry. Requires `entry_id` and `topic_id`.                                                    |
+| Tool              | Description                                                                                                                                                                |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `search_entries`  | Search entries by keyword, type ID, topic ID, and/or `without_responses` flag. Returns previews with `responses_count` and metadata. Optional `limit` (1–100, default 20). |
+| `get_entry`       | Fetch a single entry by ID. Pass `with_responses: true` to include all attached responses.                                                                                 |
+| `get_responses`   | List all responses stored for a given entry ID.                                                                                                                            |
+| `list_types`      | List all your entry types with their IDs. Call this before creating entries.                                                                                               |
+| `list_topics`     | List all your topics with their IDs. Call this before tagging entries.                                                                                                     |
+| `create_entry`    | Create a new entry. Requires `title`, `content` (Markdown), and `type_id`. Optionally pass `topic_ids` and `meta` (key-value object).                                      |
+| `create_response` | Store a response linked to an entry. Requires `entry_id` and `content`. Optionally pass `meta` (key-value object).                                                         |
+| `create_topic`    | Create a new topic tag. Requires `name`. Optional `color` and `icon`.                                                                                                      |
+| `add_topic`       | Attach an existing topic to an existing entry. Requires `entry_id` and `topic_id`.                                                                                         |
 
 ### Available Prompts
 
