@@ -59,6 +59,9 @@ jobs:
       - name: Run Migrations
         run: php artisan migrate --no-interaction
 
+      - name: Generate Passport Keys
+        run: php artisan passport:keys --no-interaction
+
       - name: Tests
         run: ./vendor/bin/pest --parallel
 
