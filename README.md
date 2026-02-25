@@ -1,6 +1,6 @@
 # laravel-simple-rag — Laravel Knowledge Provider
 
-A self-hosted, single-user knowledge manager and MCP server. Organise your snippets, questions, documents, and context in a web UI, then expose everything to AI assistants (Claude, etc.) via the Model Context Protocol. LLMs can read your knowledge base and write answers, scraped content, and summaries back into it.
+A self-hosted, single-user knowledge manager and MCP server built on [Laravel MCP](https://github.com/laravel/mcp). Organise your snippets, questions, documents, and context in a web UI, then expose everything to AI assistants (Claude, etc.) via the Model Context Protocol. LLMs can read your knowledge base and write answers, scraped content, and summaries back into it.
 
 ![Dashboard](./resources/docs/screenshots/dashboard.png)
 
@@ -206,6 +206,8 @@ Add the following to your Claude Desktop MCP configuration (`claude_desktop_conf
 Replace `https://your-app-url.com` with your actual app URL. On first connection, Claude Desktop will open a browser window to complete the OAuth2 authorization — approve it to grant access.
 
 > **Local development:** Run `php artisan mcp:inspector rag` for the exact configuration to use. The local `rag` server is also registered for stdio-based testing.
+
+> **HTTPS note:** Many AI agents run on Node.js, which uses its own certificate store. Self-signed or local certificates may cause connection failures. For local testing, prefer plain `http://`; use `https://` on production with a valid certificate.
 
 ### Available Tools
 
